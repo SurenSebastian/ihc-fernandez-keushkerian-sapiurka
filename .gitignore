@@ -1,0 +1,46 @@
+# Flutter and Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+
+# Android
+*.apk
+*.keystore
+
+# Uncomment the following line if you want to ignore the Android Studio folder
+ .idea/
+# Uncomment the following line if you want to ignore the local.properties file
+
+# **/local.properties
+**/*.iml
+*.hprof
+*.log
+.cxx/
+local.properties
+
+# iOS
+**/Pods/
+*.xcworkspace
+*.xcuserstate
+!default.xcworkspace
+DerivedData/
+build/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xccheckout
+*.moved-aside
+*.xcuserdatad/
+*.moved-aside
+*.xcsettings
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db

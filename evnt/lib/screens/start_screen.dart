@@ -1,0 +1,66 @@
+import 'package:flutter/material.dart';
+import 'login_screen.dart';
+import '../widgets/custom_button.dart';
+
+class StartScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.orange,
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('images/evnt_logo.png'), // Make sure to add the image to your assets
+              SizedBox(height: 20),
+              CustomButton(
+                text: 'Log in',
+                color: Colors.white,
+                textColor: Colors.orange,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginAccountScreen()),
+                  );
+                },
+              ),
+              SizedBox(height: 10),
+              CustomButton(
+                text: 'Sign up with Google',
+                icon: Icons.g_mobiledata,
+                color: Colors.white,
+                textColor: Colors.orange,
+                onPressed: () {
+                  // Implement Google sign in
+                },
+              ),
+              SizedBox(height: 10),
+              CustomButton(
+                text: 'Sign up with Facebook',
+                icon: Icons.facebook,
+                color: Colors.white,
+                textColor: Colors.orange,
+                onPressed: () {
+                  // Implement Facebook sign in
+                },
+              ),
+              SizedBox(height: 10),
+              Text('or', style: TextStyle(color: Colors.white)),
+              SizedBox(height: 10),
+              CustomButton(
+                text: 'Create a new account',
+                color: Colors.black,
+                textColor: Colors.white,
+                onPressed: () {
+                  // Implement Create a new account
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
