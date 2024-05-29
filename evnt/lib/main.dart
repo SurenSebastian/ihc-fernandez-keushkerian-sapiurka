@@ -1,5 +1,7 @@
+import 'package:evnt/screens/menu_screen.dart';
 import 'package:flutter/material.dart';
 import 'screens/start_screen.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -13,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ),
-      home: StartScreen(),
+      home: HomeScreen(),
     );
   }
 }
