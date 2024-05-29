@@ -203,7 +203,7 @@ class SettingsScreen extends StatelessWidget {
       bottomNavigationBar: BottomAppBar(
         color: Color.fromARGB(255, 255,106, 0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
               icon: Icon(Icons.arrow_back),
