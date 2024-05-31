@@ -1,0 +1,9 @@
+<resources>
+    <string name="default_web_client_id" translatable="false">312146693688-4i478ve70g9029c7igq9p6df5ked68o1.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://evnt-3b5b0.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">312146693688</string>
+    <string name="google_api_key" translatable="false">AIzaSyAnBqqGhdnVmPYb5MQJqne06STjQnO79i0</string>
+    <string name="google_app_id" translatable="false">1:312146693688:android:b0234d088b25a07724e0cd</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAnBqqGhdnVmPYb5MQJqne06STjQnO79i0</string>
+    <string name="project_id" translatable="false">evnt-3b5b0</string>
+</resources>

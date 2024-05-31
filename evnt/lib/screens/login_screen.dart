@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../widgets/custom_button.dart';
+import 'package:provider/provider.dart';
+import '../services/auth_service.dart';
+import 'event_screen.dart';
 
 class LoginAccountScreen extends StatelessWidget {
   @override
@@ -83,8 +87,18 @@ class LoginAccountScreen extends StatelessWidget {
                 icon: Icons.g_mobiledata,
                 color: Colors.white,
                 textColor: Colors.orange,
-                onPressed: () {
-                  // Implement Google login
+                onPressed: () async {
+                  final authService = Provider.of<AuthService>(context, listen: false);
+                  User? user = await authService.signInWithGoogle();
+                  if (user != null) {
+                    print('Successfully signed in with Google: ${user.displayName}');
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => EventScreen()),
+                    );
+                  } else {
+                    print('Failed to sign in with Google');
+                  }
                 },
               ),
             ],

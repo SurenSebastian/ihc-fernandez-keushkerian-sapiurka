@@ -1,4 +1,4 @@
-package com.example.evnt
+package com.ort.ihc.evnt
 
 import io.flutter.embedding.android.FlutterActivity
 
