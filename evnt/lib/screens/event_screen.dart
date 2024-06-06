@@ -2,11 +2,13 @@ import 'package:evnt/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class EventScreen extends StatelessWidget {
+  const EventScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Rock Concert'),
+        title: const Text('Rock Concert'),
         backgroundColor: Colors.orange,
       ),
       body: Padding(
@@ -14,7 +16,7 @@ class EventScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
+            const Center(
               child: Column(
                 children: [
                   Icon(
@@ -33,26 +35,26 @@ class EventScreen extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'An event created for the ones who love rock and would like to have a nice evening. Bands playing would be Maneskin, St Louis and much more!',
               style: TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'Day: 18th March',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            Text(
+            const Text(
               'Hour: 13:00 PM - 21:00 PM',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            Text(
+            const Text(
               'Tags: food, rock, outdoor',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
-            Center(
+            const SizedBox(height: 16),
+            const Center(
               child: Column(
                 children: [
                   Text(
@@ -69,7 +71,7 @@ class EventScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -91,14 +93,14 @@ class EventScreen extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
           ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.orange,
         child: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             // Acción al presionar el botón de retroceso
           },

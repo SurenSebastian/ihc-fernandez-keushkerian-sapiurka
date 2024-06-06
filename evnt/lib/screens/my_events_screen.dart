@@ -20,6 +20,8 @@ class MyEventsScreen extends StatelessWidget {
     {'title': 'Book Club Meeting'},
   ];
 
+  MyEventsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

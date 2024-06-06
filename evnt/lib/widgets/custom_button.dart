@@ -7,7 +7,7 @@ class CustomButton extends StatelessWidget {
   final Color textColor;
   final VoidCallback onPressed;
 
-  CustomButton({
+  const CustomButton({super.key, 
     required this.text,
     this.icon,
     required this.color,
@@ -19,7 +19,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton.icon(
       onPressed: onPressed,
-      icon: icon != null ? Icon(icon, color: textColor) : SizedBox.shrink(),
+      icon: icon != null ? Icon(icon, color: textColor) : const SizedBox.shrink(),
       label: Text(text, style: TextStyle(color: textColor)),
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
