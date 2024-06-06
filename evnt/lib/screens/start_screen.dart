@@ -3,6 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'login_screen.dart';
 import '../widgets/custom_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'event_screen.dart';
+import '../widgets/google_signin_button.dart';
+
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
@@ -17,10 +20,44 @@ class StartScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('images/evnt_logo.png'), // Make sure to add the image to your assets
+              Image.asset('images/evnt_logo.png'), // Ensure the image is added to your assets
               const SizedBox(height: 20),
+              GoogleSignInButton(
+                onPressed: () async {
+                  User? user = await signInWithGoogle();
+                  if (user != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EventScreen()),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Successfully signed in with Google')),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Failed to sign in with Google')),
+                    );
+                  }
+                },
+              ),
+              const SizedBox(height: 10),
               CustomButton(
-                text: 'Log in',
+                text: 'Sign in with Facebook',
+                icon: Icons.facebook,
+                color: Colors.blue,
+                textColor: Colors.white,
+                onPressed: () {
+                  // Implement Facebook sign-in
+                },
+              ),
+              const SizedBox(height: 20),
+              Divider(
+                color: Colors.white,
+                thickness: 1,
+              ),
+              const SizedBox(height: 10),
+              CustomButton(
+                text: 'Log in Evnt Account',
                 color: Colors.white,
                 textColor: Colors.orange,
                 onPressed: () {
@@ -32,43 +69,11 @@ class StartScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               CustomButton(
-                text: 'Sign up with Google',
-                icon: Icons.g_mobiledata,
-                color: Colors.white,
-                textColor: Colors.orange,
-                onPressed: () async {
-                  User? user = await signUpWithGoogle();
-                  if (user != null) {
-                    // Navigate to the next screen or show a success message
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Successfully signed up with Google')),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Failed to sign up with Google')),
-                    );
-                  }
-                },
-              ),
-              const SizedBox(height: 10),
-              CustomButton(
-                text: 'Sign up with Facebook',
-                icon: Icons.facebook,
+                text: 'Create Evnt Account',
                 color: Colors.white,
                 textColor: Colors.orange,
                 onPressed: () {
-                  // Implement Facebook sign in
-                },
-              ),
-              const SizedBox(height: 10),
-              const Text('or', style: TextStyle(color: Colors.white)),
-              const SizedBox(height: 10),
-              CustomButton(
-                text: 'Create a new account',
-                color: Colors.black,
-                textColor: Colors.white,
-                onPressed: () {
-                  // Implement Create a new account
+                  // Navigate to the Create Account screen
                 },
               ),
             ],
@@ -79,7 +84,9 @@ class StartScreen extends StatelessWidget {
   }
 }
 
-Future<User?> signUpWithGoogle() async {
+
+
+Future<User?> signInWithGoogle() async {
   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
   if (googleUser != null) {
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;

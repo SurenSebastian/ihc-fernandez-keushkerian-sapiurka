@@ -44,11 +44,11 @@ class AuthWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
-
-    if (user == null) {
-      return StartScreen();
-    } else {
-      return EventScreen(); // Or any other screen you want to show after login
-    }
+    return StartScreen();
+    // if (user == null) {
+    //
+    // } else {
+    //   return EventScreen(); // Or any other screen you want to show after login
+    // }
   }
 }

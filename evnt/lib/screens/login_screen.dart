@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
-import 'event_screen.dart';
+
 
 class LoginAccountScreen extends StatelessWidget {
   @override
@@ -61,46 +61,9 @@ class LoginAccountScreen extends StatelessWidget {
                       Navigator.pop(context);
                     },
                   ),
-                  CustomButton(
-                    text: 'Log in',
-                    color: Colors.brown,
-                    textColor: Colors.white,
-                    onPressed: () {
-                      // Implement Login
-                    },
-                  ),
                 ],
               ),
-              SizedBox(height: 10),
-              CustomButton(
-                text: 'Login with Facebook',
-                icon: Icons.facebook,
-                color: Colors.blue,
-                textColor: Colors.white,
-                onPressed: () {
-                  // Implement Facebook login
-                },
-              ),
-              SizedBox(height: 10),
-              CustomButton(
-                text: 'Sign in with Google',
-                icon: Icons.g_mobiledata,
-                color: Colors.white,
-                textColor: Colors.orange,
-                onPressed: () async {
-                  final authService = Provider.of<AuthService>(context, listen: false);
-                  User? user = await authService.signInWithGoogle();
-                  if (user != null) {
-                    print('Successfully signed in with Google: ${user.displayName}');
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => EventScreen()),
-                    );
-                  } else {
-                    print('Failed to sign in with Google');
-                  }
-                },
-              ),
+
             ],
           ),
         ),
