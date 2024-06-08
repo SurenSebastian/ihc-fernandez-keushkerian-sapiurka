@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'login_screen.dart';
 import '../widgets/custom_button.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'event_screen.dart';
+import '../widgets/google_signin_button.dart';
+import 'create_event_account.dart';
+
 
 class StartScreen extends StatelessWidget {
+  const StartScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,10 +21,44 @@ class StartScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('images/evnt_logo.png'), // Make sure to add the image to your assets
-              SizedBox(height: 20),
+              Image.asset('images/evnt_logo.png'), // Ensure the image is added to your assets
+              const SizedBox(height: 20),
+              GoogleSignInButton(
+                onPressed: () async {
+                  User? user = await signInWithGoogle();
+                  if (user != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EventScreen()),
+                    );
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Successfully signed in with Google')),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Failed to sign in with Google')),
+                    );
+                  }
+                },
+              ),
+              const SizedBox(height: 10),
               CustomButton(
-                text: 'Log in',
+                text: 'Sign in with Facebook',
+                icon: Icons.facebook,
+                color: Colors.blue,
+                textColor: Colors.white,
+                onPressed: () {
+                  // Implement Facebook sign-in
+                },
+              ),
+              const SizedBox(height: 20),
+              Divider(
+                color: Colors.white,
+                thickness: 1,
+              ),
+              const SizedBox(height: 10),
+              CustomButton(
+                text: 'Log in Evnt Account',
                 color: Colors.white,
                 textColor: Colors.orange,
                 onPressed: () {
@@ -26,35 +68,16 @@ class StartScreen extends StatelessWidget {
                   );
                 },
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               CustomButton(
-                text: 'Sign up with Google',
-                icon: Icons.g_mobiledata,
+                text: 'Create Evnt Account',
                 color: Colors.white,
                 textColor: Colors.orange,
                 onPressed: () {
-                  // Implement Google sign in
-                },
-              ),
-              SizedBox(height: 10),
-              CustomButton(
-                text: 'Sign up with Facebook',
-                icon: Icons.facebook,
-                color: Colors.white,
-                textColor: Colors.orange,
-                onPressed: () {
-                  // Implement Facebook sign in
-                },
-              ),
-              SizedBox(height: 10),
-              Text('or', style: TextStyle(color: Colors.white)),
-              SizedBox(height: 10),
-              CustomButton(
-                text: 'Create a new account',
-                color: Colors.black,
-                textColor: Colors.white,
-                onPressed: () {
-                  // Implement Create a new account
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EventAccount()),
+                  );
                 },
               ),
             ],
@@ -63,4 +86,20 @@ class StartScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+
+
+Future<User?> signInWithGoogle() async {
+  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+  if (googleUser != null) {
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+    return userCredential.user;
+  }
+  return null;
 }

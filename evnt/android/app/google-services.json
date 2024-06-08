@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "312146693688",
+    "project_id": "evnt-3b5b0",
+    "storage_bucket": "evnt-3b5b0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:312146693688:android:b0234d088b25a07724e0cd",
+        "android_client_info": {
+          "package_name": "com.ort.ihc.evnt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "312146693688-2kl97pvat486r7nangk2d1gu5hm610so.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ort.ihc.evnt",
+            "certificate_hash": "0e89e95712d76d0ffd0035a25cfdf12d14d62ac4"
+          }
+        },
+        {
+          "client_id": "312146693688-4i478ve70g9029c7igq9p6df5ked68o1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ort.ihc.evnt",
+            "certificate_hash": "2fe1f2523ebaeadf34d62f1241a5f5882a4694f5"
+          }
+        },
+        {
+          "client_id": "312146693688-ije1iua3kc2d35jvda9olv5c63mo34cu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAnBqqGhdnVmPYb5MQJqne06STjQnO79i0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "312146693688-ije1iua3kc2d35jvda9olv5c63mo34cu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

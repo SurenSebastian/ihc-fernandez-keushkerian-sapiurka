@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../widgets/custom_button.dart';
+import 'package:provider/provider.dart';
+import '../services/auth_service.dart';
+
 
 class LoginAccountScreen extends StatelessWidget {
   @override
@@ -57,36 +61,9 @@ class LoginAccountScreen extends StatelessWidget {
                       Navigator.pop(context);
                     },
                   ),
-                  CustomButton(
-                    text: 'Log in',
-                    color: Colors.brown,
-                    textColor: Colors.white,
-                    onPressed: () {
-                      // Implement Login
-                    },
-                  ),
                 ],
               ),
-              SizedBox(height: 10),
-              CustomButton(
-                text: 'Login with Facebook',
-                icon: Icons.facebook,
-                color: Colors.blue,
-                textColor: Colors.white,
-                onPressed: () {
-                  // Implement Facebook login
-                },
-              ),
-              SizedBox(height: 10),
-              CustomButton(
-                text: 'Sign in with Google',
-                icon: Icons.g_mobiledata,
-                color: Colors.white,
-                textColor: Colors.orange,
-                onPressed: () {
-                  // Implement Google login
-                },
-              ),
+
             ],
           ),
         ),

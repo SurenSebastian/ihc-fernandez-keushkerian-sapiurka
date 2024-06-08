@@ -19,11 +19,13 @@ class EventSearchScreen extends StatelessWidget {
     {'title': 'Book Club Meeting', 'location': 'Central Park', 'time': '19:00'},
   ];
 
+  EventSearchScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Find your next adventure'),
+        title: const Text('Find your next adventure'),
         backgroundColor: Colors.orange,
       ),
       body: ListView.builder(
@@ -38,13 +40,13 @@ class EventSearchScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () {
                 // Acción al presionar el botón de retroceso
               },
             ),
             IconButton(
-              icon: Icon(Icons.search, color: Colors.white),
+              icon: const Icon(Icons.search, color: Colors.white),
               onPressed: () {
                 // Acción al presionar el botón de búsqueda
               },
