@@ -6,35 +6,32 @@ pluginManagement {
         assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
         return flutterSdkPath
     }
+
+
+
     settings.ext.flutterSdkPath = flutterSdkPath()
 
     includeBuild("${settings.ext.flutterSdkPath}/packages/flutter_tools/gradle")
 
     repositories {
+        gradlePluginPortal()
         google()
         mavenCentral()
-        gradlePluginPortal()
     }
 }
 
-plugins {
-    //id "dev.flutter.flutter-plugin-loader" version "1.0.0"
-    id "com.android.application" version "7.3.0" apply false
-    // START: FlutterFire Configuration
-    id "com.google.gms.google-services" version "4.3.15" apply false
-    // END: FlutterFire Configuration
-    id "org.jetbrains.kotlin.android" version "1.9.0" apply false
+include ":app" , ':google_sign_in_android'
+
+def flutterProjectRoot = rootProject.projectDir.parentFile.toPath()
+
+def plugins = new Properties()
+def pluginsFile = new File(flutterProjectRoot.toFile(), '.flutter-plugins')
+if (pluginsFile.exists()) {
+    pluginsFile.withReader('UTF-8') { reader -> plugins.load(reader) }
 }
 
-include ":app"
-
-
-// Include the necessary Firebase and Google Sign-In projects with correct paths
-include ':firebase_core'
-project(':firebase_core').projectDir = new File("C:/Users/Suren/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_core-3.0.0/android")
-
-include ':firebase_auth'
-project(':firebase_auth').projectDir = new File("C:/Users/Suren/AppData/Local/Pub/Cache/hosted/pub.dev/firebase_auth-5.0.0/android")
-
-include ':google_sign_in_android'
-project(':google_sign_in_android').projectDir = new File("C:/Users/Suren/AppData/Local/Pub/Cache/hosted/pub.dev/google_sign_in_android-6.1.23/android")
+plugins.each { name, path ->
+    def pluginDirectory = flutterProjectRoot.resolve(path).resolve('android').toFile()
+    include ":$name"
+    project(":$name").projectDir = pluginDirectory
+}

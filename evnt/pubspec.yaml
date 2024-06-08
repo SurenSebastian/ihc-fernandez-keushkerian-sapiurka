@@ -32,7 +32,6 @@ dependencies:
     sdk: flutter
   firebase_core: ^3.0.0
   firebase_auth: ^5.0.0
-  #google_sign_in: latest_version
   google_sign_in: ^6.2.1
   provider: ^6.0.4
 
@@ -44,8 +43,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  # The "flutter_lints" package below contains a set of recommended lints to
+   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
