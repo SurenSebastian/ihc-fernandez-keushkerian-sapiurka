@@ -5,6 +5,7 @@ import '../widgets/custom_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'event_screen.dart';
 import '../widgets/google_signin_button.dart';
+import 'create_event_account.dart';
 
 
 class StartScreen extends StatelessWidget {
@@ -73,7 +74,10 @@ class StartScreen extends StatelessWidget {
                 color: Colors.white,
                 textColor: Colors.orange,
                 onPressed: () {
-                  // Navigate to the Create Account screen
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => EventAccount()),
+                  );
                 },
               ),
             ],
