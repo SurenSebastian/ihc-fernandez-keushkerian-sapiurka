@@ -1,7 +1,11 @@
+import 'package:evnt/services/firestore.dart';
 import 'package:evnt/widgets/event_detailed_card.dart';
 import 'package:flutter/material.dart';
 
 class EventSearchScreen extends StatelessWidget {
+  const EventSearchScreen({super.key});
+
+  /*
   final List<Map<String, String>> events = [
     {'title': 'Rock Concert', 'location': 'Central Park', 'time': '13:00'},
     {'title': 'Yoga Class', 'location': 'Fitness local', 'time': '19:00'},
@@ -18,40 +22,56 @@ class EventSearchScreen extends StatelessWidget {
     {'title': 'Cooking Workshop', 'location': 'Central Park', 'time': '18:00'},
     {'title': 'Book Club Meeting', 'location': 'Central Park', 'time': '19:00'},
   ];
+  */
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Find your next adventure'),
-        backgroundColor: Colors.orange,
-      ),
-      body: ListView.builder(
-        itemCount: events.length,
-        itemBuilder: (context, index) {
-          return EventDetailedCard(event: events[index]);
-        },
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.orange,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () {
-                // Acción al presionar el botón de retroceso
+    return FutureBuilder(
+      future: FirestoreService().getEvents(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (snapshot.hasData){
+          var events = snapshot.data!;
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Find your next adventure'),
+              backgroundColor: Colors.orange,
+            ),
+            body: ListView.builder(
+              itemCount: events.length,
+              itemBuilder: (context, index) {
+                return EventDetailedCard(event: events[index]);
               },
             ),
-            IconButton(
-              icon: Icon(Icons.search, color: Colors.white),
-              onPressed: () {
-                // Acción al presionar el botón de búsqueda
-              },
+            bottomNavigationBar: BottomAppBar(
+              color: Colors.orange,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      // Acción al presionar el botón de retroceso
+                    },
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.search, color: Colors.white),
+                    onPressed: () {
+                      // Acción al presionar el botón de búsqueda
+                    },
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
+          );
+        } else {
+          return const Center(child: Text('Error: No events found.'));
+        }
+      },
     );
+    
   }
 }
