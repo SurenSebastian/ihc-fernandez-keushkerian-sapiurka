@@ -76,7 +76,7 @@ class StartScreen extends StatelessWidget {
                 onPressed: () {
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => EventAccount()),
+                      MaterialPageRoute(builder: (context) => CreateEventAccount()),
                   );
                 },
               ),
