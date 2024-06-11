@@ -44,3 +44,8 @@ build/
 
 # Windows
 Thumbs.db
+.idea/libraries/Dart_SDK.xml
+.idea/vcs.xml
+.idea/modules.xml
+.idea/misc.xml
+.idea

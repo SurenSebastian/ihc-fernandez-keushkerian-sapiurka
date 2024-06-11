@@ -3,6 +3,9 @@ import '../widgets/input_field.dart';
 import '../widgets/action_button.dart';
 import '../widgets/date_dropdown.dart';
 import '../widgets/custom_button.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+
 
 class CreateEventAccount extends StatefulWidget {
   @override
@@ -26,6 +29,7 @@ class _CreateEventAccount extends State<CreateEventAccount> {
   ];
   List<String> years = List<String>.generate(100, (index) => (DateTime.now().year - index).toString());
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +107,24 @@ class _CreateEventAccount extends State<CreateEventAccount> {
                       color: Colors.orange,
                       textColor: Colors.white,
                       onPressed: () {
+                        String firstName = firstNameController.text;
+                        String lastName = lastNameController.text;
+                        String email = emailController.text;
+                        String password = passwordController.text;
+                        String birthDate = "$selectedDay $selectedMonth $selectedYear";
+
+                        _firestore.collection('users').add({
+                          'firstName': firstName,
+                          'lastName': lastName,
+                          'email': email,
+                          'password': password,
+                          'birthDate': birthDate,
+                        }).then((value) {
+                          print("User Added");
+                        }).catchError((error) {
+                          print("Failed to add user: $error");
+                        });
+
                         
                       },
                     ),

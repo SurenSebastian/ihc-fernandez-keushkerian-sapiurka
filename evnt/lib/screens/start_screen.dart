@@ -21,7 +21,7 @@ class StartScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('images/evnt_logo.png'), // Ensure the image is added to your assets
+              Image.asset('images/evnt_logo.png'),
               const SizedBox(height: 20),
               GoogleSignInButton(
                 onPressed: () async {

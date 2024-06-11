@@ -19,8 +19,8 @@ class EventDetailedCard extends StatelessWidget {
           Icons.image,
           color: Colors.orange,
         ),
-        title: Text(event.title),
-        subtitle: Text('${event.location} ${event.time}'),
+          title: Text(event['title'] ?? "Sin título"),
+          subtitle: Text('${event['location']} ${event['time']}'),
       ),
     );
   }

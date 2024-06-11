@@ -1,11 +1,8 @@
 plugins {
     id "com.android.application"
-    // START: FlutterFire Configuration
     id 'com.google.gms.google-services'
-    // END: FlutterFire Configuration
-    id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
-    id 'com.google.gms.google-services'
+    id "org.jetbrains.kotlin.android" // Add Kotlin plugin
 }
 
 def localProperties = new Properties()
@@ -72,11 +69,9 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:33.1.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-auth'
-    //implementation 'com.google.firebase:firebase-core'
-
     implementation 'com.google.firebase:firebase-core:21.1.1'
-    // Google Sign-In
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
+
 
     // Add the dependencies for any other desired Firebase products
     //https://firebase.google.com/docs/android/setup#available-libraries
