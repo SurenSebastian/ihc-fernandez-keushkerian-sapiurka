@@ -3,9 +3,15 @@ import 'package:flutter/material.dart';
 import '../widgets/custom_button.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
+import 'event_screen.dart';
 
 
 class LoginAccountScreen extends StatelessWidget {
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,6 +67,44 @@ class LoginAccountScreen extends StatelessWidget {
                       Navigator.pop(context);
                     },
                   ),
+                  CustomButton(
+                    text: 'Login',
+                    color: Colors.white,
+                    textColor: Colors.orange,
+                    onPressed: () async {
+                      try {
+                        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+                          email: emailController.text,
+                          password: passwordController.text,
+                        );
+                        // The user was signed in successfully
+                        User? user = userCredential.user;
+                        print('Signed in: ${user?.uid}');
+                        // Navigate to My Events Scre
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => EventScreen()),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Email or password not valid. Please try again.'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
+                  ),
+
+
+
+
+
+
+
+
+
+
                 ],
               ),
 

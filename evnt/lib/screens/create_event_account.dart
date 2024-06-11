@@ -4,7 +4,9 @@ import '../widgets/action_button.dart';
 import '../widgets/date_dropdown.dart';
 import '../widgets/custom_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
+import 'event_screen.dart';
 
 
 class CreateEventAccount extends StatefulWidget {
@@ -29,6 +31,7 @@ class _CreateEventAccount extends State<CreateEventAccount> {
   ];
   List<String> years = List<String>.generate(100, (index) => (DateTime.now().year - index).toString());
 
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
@@ -106,27 +109,71 @@ class _CreateEventAccount extends State<CreateEventAccount> {
                       text: "Join",
                       color: Colors.orange,
                       textColor: Colors.white,
-                      onPressed: () {
+                      onPressed: () async {
                         String firstName = firstNameController.text;
                         String lastName = lastNameController.text;
                         String email = emailController.text;
                         String password = passwordController.text;
                         String birthDate = "$selectedDay $selectedMonth $selectedYear";
 
-                        _firestore.collection('users').add({
-                          'firstName': firstName,
-                          'lastName': lastName,
-                          'email': email,
-                          'password': password,
-                          'birthDate': birthDate,
-                        }).then((value) {
-                          print("User Added");
-                        }).catchError((error) {
-                          print("Failed to add user: $error");
-                        });
+                        try {
+                          UserCredential userCredential = await _auth
+                              .createUserWithEmailAndPassword(
+                            email: email,
+                            password: password,
+                          );
+                          if (userCredential.user != null) {
+                            // The user was created successfully
+                            User? newUser = userCredential.user;
 
-                        
-                      },
+                            // Save the additional user information in Firestore
+                            _firestore.collection('users')
+                                .doc(newUser?.uid)
+                                .set({
+                              'firstName': firstName,
+                              'lastName': lastName,
+                              'email': email,
+                              'birthDate': birthDate,
+                            })
+                                .then((value) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('User Created.'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            }).catchError((error) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      'There are missing fields on the form.'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            });
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('User already exists.'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EventScreen()),
+                          );
+                        }
+                        catch (error) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('The email is already used.'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
                     ),
                   ],
                 ),

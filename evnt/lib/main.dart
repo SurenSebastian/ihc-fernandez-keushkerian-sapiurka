@@ -6,6 +6,7 @@ import 'firebase_options.dart';
 import 'package:provider/provider.dart';
 import 'screens/start_screen.dart';
 import 'services/auth_service.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 
 
