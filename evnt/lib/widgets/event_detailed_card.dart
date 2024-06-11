@@ -1,3 +1,4 @@
+import 'package:evnt/services/models.dart';
 import 'package:flutter/material.dart';
 
 class EventDetailedCard extends StatelessWidget {
@@ -18,8 +19,8 @@ class EventDetailedCard extends StatelessWidget {
           Icons.image,
           color: Colors.orange,
         ),
-        title: Text(event['title']!),
-        subtitle: Text('${event['location']} ${event['time']}'),
+        title: Text(event.title),
+        subtitle: Text('${event.location} ${event.time}'),
       ),
     );
   }
