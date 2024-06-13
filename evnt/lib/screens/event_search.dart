@@ -1,3 +1,4 @@
+import 'package:evnt/screens/event_advanced_search.dart';
 import 'package:evnt/services/firestore.dart';
 import 'package:evnt/widgets/event_detailed_card.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +61,10 @@ class EventSearchScreen extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.search, color: Colors.white),
                     onPressed: () {
-                      // Acción al presionar el botón de búsqueda
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const EventAdvancedSearchScreen()),
+                      );
                     },
                   ),
                 ],

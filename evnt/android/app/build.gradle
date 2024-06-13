@@ -1,6 +1,7 @@
 plugins {
     id "com.android.application"
     id 'com.google.gms.google-services'
+    id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
     id "org.jetbrains.kotlin.android" // Add Kotlin plugin
 }
@@ -44,12 +45,11 @@ android {
     defaultConfig {
         applicationId "com.ort.ihc.evnt"
         minSdkVersion 33
+
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-
-
-
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -72,7 +72,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation 'com.google.android.gms:play-services-auth:20.3.0'
     implementation 'com.google.firebase:firebase-messaging'
-
+	implementation 'androidx.multidex:multidex:2.0.1'
     // Add the dependencies for any other desired Firebase products
     //https://firebase.google.com/docs/android/setup#available-libraries
 }
+    
