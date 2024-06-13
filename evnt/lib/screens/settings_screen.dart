@@ -1,15 +1,14 @@
 import "package:flutter/material.dart";
 
-
 class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings'),
-        backgroundColor:Color.fromARGB(255, 255,106, 0),
+        title: const Text('Settings'),
+        backgroundColor: const Color.fromARGB(255, 255, 106, 0),
         centerTitle: true,
-        titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+        titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -20,17 +19,17 @@ class SettingsScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
+                  const Text(
                     'Username',
                     style: TextStyle(fontSize: 16),
                   ),
                   ElevatedButton(
                     onPressed: () {},
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 255,106, 0),
+                      backgroundColor: const Color.fromARGB(255, 255, 106, 0),
                       foregroundColor: Colors.white,
                     ),
-                    child: Text('OK'),
+                    child: const Text('OK'),
                   ),
                 ],
               ),
@@ -45,8 +44,8 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
-              Text(
+              const SizedBox(height: 16),
+              const Text(
                 'Password',
                 style: TextStyle(fontSize: 16),
               ),
@@ -62,8 +61,8 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
-              Text(
+              const SizedBox(height: 16),
+              const Text(
                 'E-mail',
                 style: TextStyle(fontSize: 16),
               ),
@@ -78,28 +77,28 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 32),
-              Text(
+              const SizedBox(height: 32),
+              const Text(
                 'Notification Settings',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Enable notifications'),
+                  const Text('Enable notifications'),
                   Switch(
                     value: true,
                     onChanged: (value) {},
-                    activeColor: Color.fromARGB(255, 255,106, 0),
+                    activeColor: const Color.fromARGB(255, 255, 106, 0),
                   ),
                 ],
               ),
-              SizedBox(height: 16),
-              Text('Event\'s type:'),
-              SizedBox(height: 8),
+              const SizedBox(height: 16),
+              const Text('Event\'s type:'),
+              const SizedBox(height: 8),
               Container(
-                padding: EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
                   color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(8.0),
@@ -108,46 +107,46 @@ class SettingsScreen extends StatelessWidget {
                   spacing: 8.0,
                   children: [
                     Chip(
-                      label: Text('sports'),
+                      label: const Text('sports'),
                       onDeleted: () {},
-                      backgroundColor: Color.fromARGB(255, 255,106, 0),
+                      backgroundColor: const Color.fromARGB(255, 255, 106, 0),
                       deleteIconColor: Colors.white,
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: const TextStyle(color: Colors.white),
                     ),
                     Chip(
-                      label: Text('pets'),
+                      label: const Text('pets'),
                       onDeleted: () {},
-                      backgroundColor: Color.fromARGB(255, 255,106, 0),
+                      backgroundColor: const Color.fromARGB(255, 255, 106, 0),
                       deleteIconColor: Colors.white,
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: const TextStyle(color: Colors.white),
                     ),
                     Chip(
-                      label: Text('indoor'),
+                      label: const Text('indoor'),
                       onDeleted: () {},
-                      backgroundColor: Color.fromARGB(255, 255,106, 0),
+                      backgroundColor: const Color.fromARGB(255, 255, 106, 0),
                       deleteIconColor: Colors.white,
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: const TextStyle(color: Colors.white),
                     ),
                     Chip(
-                      label: Text('outdoor'),
+                      label: const Text('outdoor'),
                       onDeleted: () {},
-                      backgroundColor:Color.fromARGB(255, 255,106, 0),
+                      backgroundColor: const Color.fromARGB(255, 255, 106, 0),
                       deleteIconColor: Colors.white,
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: const TextStyle(color: Colors.white),
                     ),
                     Chip(
-                      label: Text('movies'),
+                      label: const Text('movies'),
                       onDeleted: () {},
-                      backgroundColor:Color.fromARGB(255, 255,106, 0),
+                      backgroundColor: const Color.fromARGB(255, 255, 106, 0),
                       deleteIconColor: Colors.white,
-                      labelStyle: TextStyle(color: Colors.white),
+                      labelStyle: const TextStyle(color: Colors.white),
                     ),
                   ],
                 ),
               ),
-              SizedBox(height: 16),
-              Text('Frequency:'),
-              SizedBox(height: 8),
+              const SizedBox(height: 16),
+              const Text('Frequency:'),
+              const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   filled: true,
@@ -158,42 +157,44 @@ class SettingsScreen extends StatelessWidget {
                   ),
                 ),
                 items: [
-                  DropdownMenuItem(
+                  const DropdownMenuItem(
                     child: Text('Each time an event appears'),
                     value: 'each_time',
                   ),
-                  DropdownMenuItem(
+                  const DropdownMenuItem(
                     child: Text('Daily'),
                     value: 'daily',
                   ),
-                  DropdownMenuItem(
+                  const DropdownMenuItem(
                     child: Text('Weekly'),
                     value: 'weekly',
                   ),
                 ],
                 onChanged: (value) {},
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Center(
                 child: TextButton(
                   onPressed: () {},
-                  child: Text(
+                  child: const Text(
                     'Privacy policy & terms of service',
                     style: TextStyle(color: Colors.blue),
                   ),
                 ),
               ),
-              SizedBox(height: 32),
+              const SizedBox(height: 32),
               Center(
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
-                    foregroundColor: Color.fromARGB(255, 255,106, 0),
-                    side: BorderSide(color:Color.fromARGB(255, 255,106, 0)),
-                    padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    foregroundColor: const Color.fromARGB(255, 255, 106, 0),
+                    side: const BorderSide(
+                        color: Color.fromARGB(255, 255, 106, 0)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 12),
                   ),
-                  child: Text('Log Out'),
+                  child: const Text('Log Out'),
                 ),
               ),
             ],
@@ -201,15 +202,15 @@ class SettingsScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Color.fromARGB(255, 255,106, 0),
+        color: const Color.fromARGB(255, 255, 106, 0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {},
               color: Colors.white,
-              iconSize: 40, // Tamaño del ícono
+              iconSize: 40,
             ),
           ],
         ),
