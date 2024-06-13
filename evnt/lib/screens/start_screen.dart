@@ -1,3 +1,4 @@
+import 'package:evnt/screens/menu_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_screen.dart';
@@ -29,7 +30,7 @@ class StartScreen extends StatelessWidget {
                   if (user != null) {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => EventScreen()),
+                      MaterialPageRoute(builder: (context) => MenuScreen()),
                     );
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Successfully signed in with Google')),

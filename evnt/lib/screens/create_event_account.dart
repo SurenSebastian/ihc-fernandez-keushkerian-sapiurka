@@ -1,3 +1,4 @@
+import 'package:evnt/screens/menu_screen.dart';
 import 'package:flutter/material.dart';
 import '../widgets/input_field.dart';
 import '../widgets/action_button.dart';
@@ -141,6 +142,12 @@ class _CreateEventAccount extends State<CreateEventAccount> {
                                   content: Text('User Created.'),
                                   backgroundColor: Colors.green,
                                 ),
+
+                              );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MenuScreen()),
                               );
                             }).catchError((error) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -159,11 +166,7 @@ class _CreateEventAccount extends State<CreateEventAccount> {
                               ),
                             );
                           }
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => EventScreen()),
-                          );
+
                         }
                         catch (error) {
                           ScaffoldMessenger.of(context).showSnackBar(

@@ -4,9 +4,9 @@ import 'package:evnt/widgets/event_detailed_card.dart';
 import 'package:flutter/material.dart';
 
 class EventSearchScreen extends StatelessWidget {
-   EventSearchScreen({super.key});
+  const EventSearchScreen({super.key});
 
-
+  /*
   final List<Map<String, String>> events = [
     {'title': 'Rock Concert', 'location': 'Central Park', 'time': '13:00'},
     {'title': 'Yoga Class', 'location': 'Fitness local', 'time': '19:00'},
@@ -23,7 +23,7 @@ class EventSearchScreen extends StatelessWidget {
     {'title': 'Cooking Workshop', 'location': 'Central Park', 'time': '18:00'},
     {'title': 'Book Club Meeting', 'location': 'Central Park', 'time': '19:00'},
   ];
-
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class EventSearchScreen extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (snapshot.hasData){
-          var events = snapshot.data as List<Map<String,String>>;
+          var events = snapshot.data!;
           return Scaffold(
             appBar: AppBar(
               title: const Text('Find your next adventure'),
@@ -76,6 +76,6 @@ class EventSearchScreen extends StatelessWidget {
         }
       },
     );
-    
+
   }
 }

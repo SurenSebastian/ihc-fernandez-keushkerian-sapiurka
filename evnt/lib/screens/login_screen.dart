@@ -1,3 +1,4 @@
+import 'package:evnt/screens/menu_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../widgets/custom_button.dart';
@@ -28,6 +29,7 @@ class LoginAccountScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
               TextField(
+                controller: emailController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -39,6 +41,7 @@ class LoginAccountScreen extends StatelessWidget {
               ),
               SizedBox(height: 10),
               TextField(
+                controller: passwordController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -77,15 +80,16 @@ class LoginAccountScreen extends StatelessWidget {
                           email: emailController.text,
                           password: passwordController.text,
                         );
-                        // The user was signed in successfully
+
                         User? user = userCredential.user;
                         print('Signed in: ${user?.uid}');
-                        // Navigate to My Events Scre
+
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => EventScreen()),
+                          MaterialPageRoute(builder: (context) => MenuScreen()),
                         );
                       } catch (e) {
+                        print("Login error: $e");
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('Email or password not valid. Please try again.'),

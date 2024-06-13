@@ -40,7 +40,7 @@ class MenuScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const EventSearchScreen(),
+                    builder: (context) => EventSearchScreen(),
                   ),
                 );
               },

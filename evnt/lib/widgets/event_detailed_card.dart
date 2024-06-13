@@ -2,7 +2,7 @@ import 'package:evnt/services/models.dart';
 import 'package:flutter/material.dart';
 
 class EventDetailedCard extends StatelessWidget {
-  final Map<String, String> event;
+  final Event event;
 
   const EventDetailedCard({super.key, required this.event});
 
@@ -19,8 +19,8 @@ class EventDetailedCard extends StatelessWidget {
           Icons.image,
           color: Colors.orange,
         ),
-          title: Text(event['title'] ?? "Sin título"),
-          subtitle: Text('${event['location']} ${event['time']}'),
+        title: Text(event.title),
+        subtitle: Text('${event.location} ${event.time}'),
       ),
     );
   }
