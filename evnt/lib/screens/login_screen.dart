@@ -1,7 +1,18 @@
+import 'package:evnt/screens/menu_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../widgets/custom_button.dart';
+import 'package:provider/provider.dart';
+import '../services/auth_service.dart';
+import 'event_screen.dart';
+
 
 class LoginAccountScreen extends StatelessWidget {
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,6 +29,7 @@ class LoginAccountScreen extends StatelessWidget {
               ),
               SizedBox(height: 20),
               TextField(
+                controller: emailController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -29,6 +41,7 @@ class LoginAccountScreen extends StatelessWidget {
               ),
               SizedBox(height: 10),
               TextField(
+                controller: passwordController,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -58,35 +71,47 @@ class LoginAccountScreen extends StatelessWidget {
                     },
                   ),
                   CustomButton(
-                    text: 'Log in',
-                    color: Colors.brown,
-                    textColor: Colors.white,
-                    onPressed: () {
-                      // Implement Login
+                    text: 'Login',
+                    color: Colors.white,
+                    textColor: Colors.orange,
+                    onPressed: () async {
+                      try {
+                        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+                          email: emailController.text,
+                          password: passwordController.text,
+                        );
+
+                        User? user = userCredential.user;
+                        print('Signed in: ${user?.uid}');
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => MenuScreen()),
+                        );
+                      } catch (e) {
+                        print("Login error: $e");
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Email or password not valid. Please try again.'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
                     },
                   ),
+
+
+
+
+
+
+
+
+
+
                 ],
               ),
-              SizedBox(height: 10),
-              CustomButton(
-                text: 'Login with Facebook',
-                icon: Icons.facebook,
-                color: Colors.blue,
-                textColor: Colors.white,
-                onPressed: () {
-                  // Implement Facebook login
-                },
-              ),
-              SizedBox(height: 10),
-              CustomButton(
-                text: 'Sign in with Google',
-                icon: Icons.g_mobiledata,
-                color: Colors.white,
-                textColor: Colors.orange,
-                onPressed: () {
-                  // Implement Google login
-                },
-              ),
+
             ],
           ),
         ),

@@ -76,6 +76,6 @@ class EventSearchScreen extends StatelessWidget {
         }
       },
     );
-    
+
   }
 }

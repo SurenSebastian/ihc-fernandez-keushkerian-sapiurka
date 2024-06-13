@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 class EventDetailedCard extends StatelessWidget {
   final Event event;
+
   const EventDetailedCard({super.key, required this.event});
 
   @override

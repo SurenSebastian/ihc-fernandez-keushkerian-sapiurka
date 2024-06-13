@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 class EventCard extends StatelessWidget {
   final Map<String, String> event;
 
-  EventCard({required this.event});
+  const EventCard({super.key, required this.event});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16.0),
-        side: BorderSide(color: Colors.orange),
+        side: const BorderSide(color: Colors.orange),
       ),
       child: ListTile(
-        leading: Icon(
+        leading: const Icon(
           Icons.image,
           color: Colors.orange,
         ),
