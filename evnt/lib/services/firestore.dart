@@ -11,4 +11,12 @@ class FirestoreService {
     var topics = data.map((d) => Event.fromJson(d));
     return topics.toList();
   }
+
+  Future<List<Event>> getEventsByOwner(String ownerEmail) async {
+    var ref = _db.collection('events').where('owner', isEqualTo: ownerEmail);
+    var snapshot = await ref.get();
+    var data = snapshot.docs.map((s) => s.data());
+    var topics = data.map((d) => Event.fromJson(d));
+    return topics.toList();
+  }
 }
