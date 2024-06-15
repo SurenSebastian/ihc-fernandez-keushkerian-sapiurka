@@ -30,6 +30,14 @@
           }
         },
         {
+          "client_id": "312146693688-mggt2oia3vhfa8pc08tc8dj86esjq58d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ort.ihc.evnt",
+            "certificate_hash": "f356afedfa5c9ee9d33ac1532badc1ce9e0cab35"
+          }
+        },
+        {
           "client_id": "312146693688-ije1iua3kc2d35jvda9olv5c63mo34cu.apps.googleusercontent.com",
           "client_type": 3
         }
