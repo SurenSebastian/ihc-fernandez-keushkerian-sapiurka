@@ -8,6 +8,7 @@ class EventDetailedCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(event);
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       shape: RoundedRectangleBorder(
@@ -20,7 +21,7 @@ class EventDetailedCard extends StatelessWidget {
           color: Colors.orange,
         ),
         title: Text(event.title),
-        subtitle: Text('${event.location} ${event.time}'),
+        subtitle: Text('${event.location} ${event.dateTime.toIso8601String()}'),
       ),
     );
   }
