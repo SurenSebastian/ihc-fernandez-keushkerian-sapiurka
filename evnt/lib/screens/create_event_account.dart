@@ -9,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'event_screen.dart';
 
-
 class CreateEventAccount extends StatefulWidget {
   @override
   _CreateEventAccount createState() => _CreateEventAccount();
@@ -27,8 +26,18 @@ class _CreateEventAccount extends State<CreateEventAccount> {
   String? selectedYear;
   List<String> days = List<String>.generate(31, (index) => (index + 1).toString());
   List<String> months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
   ];
   List<String> years = List<String>.generate(100, (index) => (DateTime.now().year - index).toString());
 
@@ -39,12 +48,11 @@ class _CreateEventAccount extends State<CreateEventAccount> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Setup Your Account"),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          color: Colors.orange,
-        ),
+          title: const Text('Setup your account'),
+          backgroundColor: const Color.fromARGB(255, 255, 106, 0),
+          centerTitle: true,
+          titleTextStyle: const TextStyle(color: Colors.white, fontSize: 35)),
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Padding(
@@ -63,7 +71,9 @@ class _CreateEventAccount extends State<CreateEventAccount> {
                         items: days,
                         currentValue: selectedDay,
                         onChanged: (newValue) {
-                          setState(() { selectedDay = newValue; });
+                          setState(() {
+                            selectedDay = newValue;
+                          });
                         },
                         hint: 'Day',
                       ),
@@ -73,7 +83,9 @@ class _CreateEventAccount extends State<CreateEventAccount> {
                         items: months,
                         currentValue: selectedMonth,
                         onChanged: (newValue) {
-                          setState(() { selectedMonth = newValue; });
+                          setState(() {
+                            selectedMonth = newValue;
+                          });
                         },
                         hint: 'Month',
                       ),
@@ -83,7 +95,9 @@ class _CreateEventAccount extends State<CreateEventAccount> {
                         items: years,
                         currentValue: selectedYear,
                         onChanged: (newValue) {
-                          setState(() { selectedYear = newValue; });
+                          setState(() {
+                            selectedYear = newValue;
+                          });
                         },
                         hint: 'Year',
                       ),
@@ -117,66 +131,74 @@ class _CreateEventAccount extends State<CreateEventAccount> {
                         String password = passwordController.text;
                         String birthDate = "$selectedDay $selectedMonth $selectedYear";
 
+                        // Si algun campo es nulo, mostrar un snackbar
+                        if (firstName.isEmpty ||
+                            lastName.isEmpty ||
+                            email.isEmpty ||
+                            password.isEmpty ||
+                            selectedDay == null ||
+                            selectedMonth == null ||
+                            selectedYear == null) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Some fileds are missing.'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                          return;
+                        }
                         try {
-                          UserCredential userCredential = await _auth
-                              .createUserWithEmailAndPassword(
+                          UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
                             email: email,
                             password: password,
                           );
-                          if (userCredential.user != null) {
-                            // The user was created successfully
-                            User? newUser = userCredential.user;
 
-                            // Save the additional user information in Firestore
-                            _firestore.collection('users')
-                                .doc(newUser?.uid)
-                                .set({
-                              'firstName': firstName,
-                              'lastName': lastName,
-                              'email': email,
-                              'birthDate': birthDate,
-                            })
-                                .then((value) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('User Created.'),
-                                  backgroundColor: Colors.green,
-                                ),
+                          // Se creo el usuario correctamente
+                          User? newUser = userCredential.user;
 
-                              );
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MenuScreen()),
-                              );
-                            }).catchError((error) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                      'There are missing fields on the form.'),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            });
-                          } else {
+                          // Se guarda informacion en firestore
+                          _firestore.collection('users').doc(newUser?.uid).set({
+                            'firstName': firstName,
+                            'lastName': lastName,
+                            'email': email,
+                            'birthDate': birthDate,
+                          }).then((value) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('User already exists.'),
+                                content: Text('User Created.'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+
+                            // Clear the fields
+                            firstNameController.clear();
+                            lastNameController.clear();
+                            emailController.clear();
+                            passwordController.clear();
+                            selectedDay = null;
+                            selectedMonth = null;
+                            selectedYear = null;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => MenuScreen()),
+                            );
+                          }).catchError((error) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Failed to save user data.'),
                                 backgroundColor: Colors.red,
                               ),
                             );
-                          }
-
-                        }
-                        catch (error) {
+                          });
+                        } catch (error) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('The email is already used.'),
+                              content: Text('Error creating user. $error'),
                               backgroundColor: Colors.red,
                             ),
                           );
                         }
-                      }
+                      },
                     ),
                   ],
                 ),
