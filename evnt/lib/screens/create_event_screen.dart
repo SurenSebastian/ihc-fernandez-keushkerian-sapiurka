@@ -137,6 +137,15 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
                   builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(snapshot.error.toString()),
+                          backgroundColor: Colors.red,
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                      return const Text('Create Event');
                     } else {
                       return const Text('Create Event');
                     }
@@ -197,8 +206,16 @@ class _CreateEventScreenState extends State<CreateEventScreen> {
       owner: user?.email ?? ''
     );
 
-    FirestoreService().createEvent(event).then((_) {
-      Navigator.of(context).pop();
-    });
+    FirestoreService().createEvent(event);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Event created successfully'),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 2),
+      ),
+    );
+
+    Navigator.pop(context);
   }
 }
