@@ -169,6 +169,15 @@ class _CreateEventAccount extends State<CreateEventAccount> {
                                 backgroundColor: Colors.green,
                               ),
                             );
+
+                            // Clear the fields
+                            firstNameController.clear();
+                            lastNameController.clear();
+                            emailController.clear();
+                            passwordController.clear();
+                            selectedDay = null;
+                            selectedMonth = null;
+                            selectedYear = null;
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) => MenuScreen()),

@@ -6,9 +6,7 @@ import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 import 'event_screen.dart';
 
-
 class LoginAccountScreen extends StatelessWidget {
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -84,6 +82,8 @@ class LoginAccountScreen extends StatelessWidget {
                         User? user = userCredential.user;
                         print('Signed in: ${user?.uid}');
 
+                        emailController.clear();
+                        passwordController.clear();
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => MenuScreen()),
@@ -99,19 +99,8 @@ class LoginAccountScreen extends StatelessWidget {
                       }
                     },
                   ),
-
-
-
-
-
-
-
-
-
-
                 ],
               ),
-
             ],
           ),
         ),
