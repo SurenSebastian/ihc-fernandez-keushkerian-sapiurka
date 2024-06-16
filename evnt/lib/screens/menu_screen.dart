@@ -1,3 +1,4 @@
+import 'package:evnt/screens/create_event_screen.dart';
 import 'package:evnt/screens/my_events_screen.dart';
 import 'package:evnt/screens/profile_screen.dart';
 import 'package:evnt/screens/settings_screen.dart';
@@ -26,12 +27,12 @@ class MenuScreen extends StatelessWidget {
                 icon: Icons.add_box,
                 label: 'Create Event',
                 onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => const (),
-                  //   ),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CreateEventScreen(),
+                    ),
+                  );
                 }),
             MenuButton(
               icon: Icons.search,

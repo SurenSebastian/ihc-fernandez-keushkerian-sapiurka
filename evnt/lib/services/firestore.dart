@@ -19,4 +19,9 @@ class FirestoreService {
     var topics = data.map((d) => Event.fromJson(d));
     return topics.toList();
   }
+
+  Future<void> createEvent(Event event) async {
+    var ref = _db.collection('events');
+    await ref.add(event.toJson());
+  }
 }

@@ -5,7 +5,7 @@ part 'models.g.dart';
 @JsonSerializable()
 class Event {
   final String title;
-  final String descripcion;
+  final String description;
   final DateTime dateTime;
   final String location;
   final double price;
@@ -14,7 +14,7 @@ class Event {
 
   Event({
       this.title = '',
-      this.descripcion = '',
+      this.description = '',
       required this.dateTime,
       this.location = '',
       this.price = 0,
