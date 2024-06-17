@@ -21,7 +21,7 @@ Event _$EventFromJson(Map<String, dynamic> json) => Event(
 Map<String, dynamic> _$EventToJson(Event instance) => <String, dynamic>{
       'title': instance.title,
       'descripcion': instance.description,
-      'dateTime': instance.dateTime.toIso8601String(),
+      'dateTime': Timestamp.fromDate(instance.dateTime),
       'location': instance.location,
       'price': instance.price,
       'tags': instance.tags,
