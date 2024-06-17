@@ -12,14 +12,12 @@ class EventAdvancedSearchScreen extends StatefulWidget {
 class _EventAdvancedSearchScreenState extends State<EventAdvancedSearchScreen> {
   final List<String> _tags = [];
   final TextEditingController _tagsController = TextEditingController();
-  RangeValues _ageRange = const RangeValues(18, 60);
   RangeValues _priceRange = const RangeValues(0, 100);
   bool _isFree = false;
 
   DateTime _startingDateTime = DateTime.now();
   DateTime _finishingDateTime = DateTime.now();
 
-  bool _useAgeRange = false;
   bool _usePriceRange = false;
   bool _useStartingDateTime = false;
   bool _useFinishingDateTime = false;
@@ -52,33 +50,6 @@ class _EventAdvancedSearchScreenState extends State<EventAdvancedSearchScreen> {
               )).toList(),
             ),
             const SizedBox(height: 16),
-            const Text('Age Range:'),
-            SwitchListTile(
-              title: const Text('Use Age Range'),
-              value: _useAgeRange,
-              onChanged: (bool value) {
-                setState(() {
-                  _useAgeRange = value;
-                });
-              },
-            ),
-            if (_useAgeRange)
-              RangeSlider(
-                values: _ageRange,
-                min: 0,
-                max: 100,
-                divisions: 100,
-                labels: RangeLabels(
-                  _ageRange.start.round().toString(),
-                  _ageRange.end.round().toString(),
-                ),
-                onChanged: (values) {
-                  setState(() {
-                    _ageRange = values;
-                  });
-                },
-              ),
-            const SizedBox(height: 16),
             Row(
               children: [
                 Checkbox(
@@ -86,7 +57,7 @@ class _EventAdvancedSearchScreenState extends State<EventAdvancedSearchScreen> {
                   onChanged: (value) {
                     setState(() {
                       _isFree = value!;
-                                          });
+                    });
                   },
                 ),
                 const Text('Free')
@@ -241,7 +212,6 @@ class _EventAdvancedSearchScreenState extends State<EventAdvancedSearchScreen> {
   void _applyFilters() {
     final eventParams = EventParams(
       tags: _tags.isNotEmpty ? _tags : null,
-      ageRange: _useAgeRange ? _ageRange : null,
       isFree: _isFree ? _isFree : null,
       priceRange: _usePriceRange && !_isFree ? _priceRange : null,
       startingDateTime: _useStartingDateTime ? _startingDateTime : null,
@@ -249,17 +219,15 @@ class _EventAdvancedSearchScreenState extends State<EventAdvancedSearchScreen> {
     );
 
     print(eventParams);
+    FirestoreService().getFilteredEvents(eventParams);
   }
 
   void _clearFilters() {
     setState(() {
       _tags.clear();
-      _ageRange = const RangeValues(18, 60);
-      _priceRange = const RangeValues(0, 100);
       _isFree = false;
       _startingDateTime = DateTime.now();
       _finishingDateTime = DateTime.now();
-      _useAgeRange = false;
       _usePriceRange = false;
       _useStartingDateTime = false;
       _useFinishingDateTime = false;
