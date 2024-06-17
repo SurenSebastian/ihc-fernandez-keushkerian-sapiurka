@@ -1,4 +1,6 @@
+import 'package:evnt/services/firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class EventAdvancedSearchScreen extends StatefulWidget {
   const EventAdvancedSearchScreen({super.key});
@@ -8,30 +10,19 @@ class EventAdvancedSearchScreen extends StatefulWidget {
 }
 
 class _EventAdvancedSearchScreenState extends State<EventAdvancedSearchScreen> {
-  double _minAge = 18;
-  double _maxAge = 65;
-  double _minPrice = 0;
-  double _maxPrice = 100;
+  final List<String> _tags = [];
+  final TextEditingController _tagsController = TextEditingController();
+  RangeValues _ageRange = const RangeValues(18, 60);
+  RangeValues _priceRange = const RangeValues(0, 100);
   bool _isFree = false;
-  String _selectedTag = "sports";
-  TimeOfDay _startTime = const TimeOfDay(hour: 1, minute: 0);
-  TimeOfDay _finishTime = const TimeOfDay(hour: 1, minute: 0);
-  DateTime _startDate = DateTime.now();
-  DateTime _finishDate = DateTime.now();
-  final List<String> _tags = ['sports', 'music', 'technology', 'art'];
 
+  DateTime _startingDateTime = DateTime.now();
+  DateTime _finishingDateTime = DateTime.now();
 
-  void _confirmSearch() {
-    print("Search confirmed with the following details:");
-    print("Tag: $_selectedTag");
-    print("Age Range: $_minAge - $_maxAge");
-    print("Price Range: $_minPrice - $_maxPrice");
-    print("Free: $_isFree");
-    print("Start Time: ${_startTime.format(context)}");
-    print("Finish Time: ${_finishTime.format(context)}");
-    print("Start Date: ${_startDate.toLocal()}");
-    print("Finish Date: ${_finishDate.toLocal()}");
-  }
+  bool _useAgeRange = false;
+  bool _usePriceRange = false;
+  bool _useStartingDateTime = false;
+  bool _useFinishingDateTime = false;
 
   @override
   Widget build(BuildContext context) {
@@ -42,199 +33,236 @@ class _EventAdvancedSearchScreenState extends State<EventAdvancedSearchScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Tags/Interests:'),
-              SizedBox(height: 8),
-              DropdownButton<String>(
-                value: _selectedTag,
-                hint: Text('Select a tag'),
-                items: _tags.map((String tag) {
-                  return DropdownMenuItem<String>(
-                    value: tag,
-                    child: Text(tag),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
+        child: ListView(
+          children: [
+            TextFormField(
+              controller: _tagsController,
+              decoration: InputDecoration(
+                labelText: "Tags/Interests",
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: _addTag,
+                ),
+              ),
+            ),
+            Wrap(
+              children: _tags.map((tag) => Chip(
+                label: Text(tag),
+                onDeleted: () => _removeTag(tag),
+              )).toList(),
+            ),
+            const SizedBox(height: 16),
+            const Text('Age Range:'),
+            SwitchListTile(
+              title: const Text('Use Age Range'),
+              value: _useAgeRange,
+              onChanged: (bool value) {
+                setState(() {
+                  _useAgeRange = value;
+                });
+              },
+            ),
+            if (_useAgeRange)
+              RangeSlider(
+                values: _ageRange,
+                min: 0,
+                max: 100,
+                divisions: 100,
+                labels: RangeLabels(
+                  _ageRange.start.round().toString(),
+                  _ageRange.end.round().toString(),
+                ),
+                onChanged: (values) {
                   setState(() {
-                    _selectedTag = newValue!;
+                    _ageRange = values;
                   });
                 },
               ),
-              const SizedBox(height: 16),
-              const Text('Age Range:'),
-              Row(
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Checkbox(
+                  value: _isFree,
+                  onChanged: (value) {
+                    setState(() {
+                      _isFree = value!;
+                                          });
+                  },
+                ),
+                const Text('Free')
+              ],
+            ),
+            if (!_isFree)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('${_minAge.round()}'),
-                  Expanded(
-                    child: RangeSlider(
-                      values: RangeValues(_minAge, _maxAge),
-                      min: 0,
-                      max: 100,
-                      divisions: 100,
-                      labels: RangeLabels(
-                        _minAge.round().toString(),
-                        _maxAge.round().toString(),
-                      ),
-                      onChanged: (values) {
-                        setState(() {
-                          _minAge = values.start;
-                          _maxAge = values.end;
-                        });
-                      },
-                    ),
-                  ),
-                  Text('${_maxAge.round()}'),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  const Text('Free'),
-                  Checkbox(
-                    value: _isFree,
-                    onChanged: (value) {
+                  const Text('Price Range:'),
+                  SwitchListTile(
+                    title: const Text('Use Price Range'),
+                    value: _usePriceRange,
+                    onChanged: (bool value) {
                       setState(() {
-                        _isFree = value ?? false;
+                        _usePriceRange = value;
                       });
                     },
                   ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              if (!_isFree)
-                const Text('Price Range:'),
-              if (!_isFree)
-                Row(
-                  children: [
-                    Text('\$${_minPrice.round()}'),
-                    Expanded(
-                      child: RangeSlider(
-                        values: RangeValues(_minPrice, _maxPrice),
-                        min: 0,
-                        max: 100,
-                        divisions: 100,
-                        labels: RangeLabels(
-                          '\$${_minPrice.round()}',
-                          '\$${_maxPrice.round()}',
-                        ),
-                        onChanged: (values) {
-                          setState(() {
-                            _minPrice = values.start;
-                            _maxPrice = values.end;
-                          });
-                        },
+                  if (_usePriceRange)
+                    RangeSlider(
+                      values: _priceRange,
+                      min: 0,
+                      max: 1000,
+                      divisions: 100,
+                      labels: RangeLabels(
+                        '\$${_priceRange.start.round()}',
+                        '\$${_priceRange.end.round()}',
                       ),
-                    ),
-                    Text('\$${_maxPrice.round()}'),
-                  ],
-                ),
-              const SizedBox(height: 16),
-              const Text('Date & Time'),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Text('Starting time'),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        TimeOfDay? picked = await showTimePicker(
-                          context: context,
-                          initialTime: _startTime,
-                        );
-                        if (picked != null) {
-                          setState(() {
-                            _startTime = picked;
-                          });
-                        }
+                      onChanged: (values) {
+                        setState(() {
+                          _priceRange = values;
+                        });
                       },
-                      child: Text(_startTime.format(context)),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Text('Finishing time'),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        TimeOfDay? picked = await showTimePicker(
-                          context: context,
-                          initialTime: _finishTime,
-                        );
-                        if (picked != null) {
-                          setState(() {
-                            _finishTime = picked;
-                          });
-                        }
-                      },
-                      child: Text(_finishTime.format(context)),
-                    ),
-                  ),
                 ],
               ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  const Text('Starting date'),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: _startDate,
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2101),
-                        );
-                        if (picked != null) {
-                          setState(() {
-                            _startDate = picked;
-                          });
-                        }
-                      },
-                      child: Text("${_startDate.toLocal()}".split(' ')[0]),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  const Text('Finishing date'),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        DateTime? picked = await showDatePicker(
-                          context: context,
-                          initialDate: _finishDate,
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2101),
-                        );
-                        if (picked != null) {
-                          setState(() {
-                            _finishDate = picked;
-                          });
-                        }
-                      },
-                      child: Text("${_finishDate.toLocal()}".split(' ')[0]),
-                    ),
-                  ),
-                ],
+            const SizedBox(height: 16),
+            const Text('Date & Time'),
+            SwitchListTile(
+              title: const Text('Use Starting DateTime'),
+              value: _useStartingDateTime,
+              onChanged: (bool value) {
+                setState(() {
+                  _useStartingDateTime = value;
+                });
+              },
+            ),
+            if (_useStartingDateTime)
+              ListTile(
+                title: Text('Starting DateTime: ${_formatDateTime(_startingDateTime)}'),
+                trailing: const Icon(Icons.calendar_today),
+                onTap: _pickStartingDateTime,
               ),
-              const SizedBox(height: 16),
-              Center(
-                child: ElevatedButton(
-                  onPressed: _confirmSearch,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
-                  ),
-                  child: const Text('Confirm Search'),
+            SwitchListTile(
+              title: const Text('Use Finishing DateTime'),
+              value: _useFinishingDateTime,
+              onChanged: (bool value) {
+                setState(() {
+                  _useFinishingDateTime = value;
+                });
+              },
+            ),
+            if (_useFinishingDateTime)
+              ListTile(
+                title: Text('Finishing DateTime: ${_formatDateTime(_finishingDateTime)}'),
+                trailing: const Icon(Icons.calendar_today),
+                onTap: _pickFinishingDateTime,
+              ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                  onPressed: _applyFilters,
+                  child: const Text('Apply Filters'),
                 ),
-              ),
-            ],
-          ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
+                  onPressed: _clearFilters,
+                  child: const Text('Clear Filters'),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  Future<void> _pickStartingDateTime() async {
+    DateTime? date = await showDatePicker(
+      context: context,
+      initialDate: _startingDateTime,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (date != null) {
+      TimeOfDay? time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(_startingDateTime),
+      );
+      if (time != null) {
+        setState(() {
+          _startingDateTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+        });
+      }
+    }
+  }
+
+  Future<void> _pickFinishingDateTime() async {
+    DateTime? date = await showDatePicker(
+      context: context,
+      initialDate: _finishingDateTime,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+    if (date != null) {
+      TimeOfDay? time = await showTimePicker(
+        context: context,
+        initialTime: TimeOfDay.fromDateTime(_finishingDateTime),
+      );
+      if (time != null) {
+        setState(() {
+          _finishingDateTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+        });
+      }
+    }
+  }
+
+  void _addTag() {
+    final tag = _tagsController.text;
+    if (tag.isNotEmpty) {
+      setState(() {
+        _tags.add(tag);
+        _tagsController.clear();
+      });
+    }
+  }
+
+  void _removeTag(String tag) {
+    setState(() {
+      _tags.remove(tag);
+    });
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    return DateFormat('yyyy-MM-dd – kk:mm').format(dateTime);
+  }
+
+  void _applyFilters() {
+    final eventParams = EventParams(
+      tags: _tags.isNotEmpty ? _tags : null,
+      ageRange: _useAgeRange ? _ageRange : null,
+      isFree: _isFree ? _isFree : null,
+      priceRange: _usePriceRange && !_isFree ? _priceRange : null,
+      startingDateTime: _useStartingDateTime ? _startingDateTime : null,
+      finishingDateTime: _useFinishingDateTime ? _finishingDateTime : null,
+    );
+
+    print(eventParams);
+  }
+
+  void _clearFilters() {
+    setState(() {
+      _tags.clear();
+      _ageRange = const RangeValues(18, 60);
+      _priceRange = const RangeValues(0, 100);
+      _isFree = false;
+      _startingDateTime = DateTime.now();
+      _finishingDateTime = DateTime.now();
+      _useAgeRange = false;
+      _usePriceRange = false;
+      _useStartingDateTime = false;
+      _useFinishingDateTime = false;
+    });
   }
 }
