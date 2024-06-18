@@ -4,12 +4,14 @@ import 'package:evnt/widgets/event_detailed_card.dart';
 import 'package:flutter/material.dart';
 
 class EventSearchScreen extends StatelessWidget {
-  const EventSearchScreen({super.key});
+  final EventParams _eventParams;
+
+  const EventSearchScreen(this._eventParams, {super.key});
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: FirestoreService().getEvents(),
+      future: FirestoreService().getFilteredEvents(_eventParams),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -22,12 +24,14 @@ class EventSearchScreen extends StatelessWidget {
               title: const Text('Find your next adventure'),
               backgroundColor: Colors.orange,
             ),
-            body: ListView.builder(
-              itemCount: events.length,
-              itemBuilder: (context, index) {
-                return EventDetailedCard(event: events[index]);
-              },
-            ),
+            body: events.isEmpty 
+                ? const Center(child: Text('No events found')) 
+                : ListView.builder(
+                    itemCount: events.length,
+                    itemBuilder: (context, index) {
+                      return EventDetailedCard(event: events[index]);
+                    },
+                  ),
             bottomNavigationBar: BottomAppBar(
               color: Colors.orange,
               child: Row(

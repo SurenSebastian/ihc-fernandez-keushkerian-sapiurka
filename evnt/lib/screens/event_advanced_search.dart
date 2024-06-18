@@ -1,3 +1,4 @@
+import 'package:evnt/screens/event_search.dart';
 import 'package:evnt/services/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -219,7 +220,10 @@ class _EventAdvancedSearchScreenState extends State<EventAdvancedSearchScreen> {
     );
 
     print(eventParams);
-    FirestoreService().getFilteredEvents(eventParams);
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => EventSearchScreen(eventParams)),
+    );
   }
 
   void _clearFilters() {
