@@ -45,7 +45,7 @@ class AuthWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User?>(context);
-    return ProfileScreen();
+    return StartScreen();
     // if (user == null) {
     //
     // } else {

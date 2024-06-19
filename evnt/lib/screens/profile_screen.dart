@@ -12,6 +12,15 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late Future<Map<String, dynamic>> userData;
   bool notificationsEnabled = false;
+  int eventsCreated = 0;
+  int eventsAttended = 0;
+  String frequency = "Each time an event appears";
+  final List<String> frequencyOptions = [
+    "Everyday",
+    "Each time an event appears",
+    "Every week",
+    "Every 10 days"
+  ];
 
   @override
   void initState() {
@@ -21,6 +30,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     userData.then((data) {
       setState(() {
         notificationsEnabled = data['notifications'] ?? false;
+        eventsCreated = data['created'] ?? 0;
+        eventsAttended = data['attended'] ?? 0;
+        frequency = data['frequency'] ?? "Each time an event appears";
       });
     });
   }
@@ -107,10 +119,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  '10 events',
+                  '$eventsAttended events',
                   style: TextStyle(fontSize: 16),
                 ),
               ),
@@ -122,10 +134,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  '2 events',
+                  '$eventsCreated events',
                   style: TextStyle(fontSize: 16),
                 ),
               ),
@@ -136,9 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onChanged: (bool value) {
                   setState(() {
                     notificationsEnabled = value;
-
-                    // FirestoreService()
-                    //     .updateUserNotifications(user?.email ?? '', value);
+                    // FirestoreService().updateUserNotifications(user?.email ?? '', value);
                   });
                 },
               ),
@@ -150,12 +160,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Each time an event appears',
-                  style: TextStyle(fontSize: 16),
-                ),
+              DropdownButton<String>(
+                value: frequency,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    frequency = newValue!;
+                    // FirestoreService().updateUserFrequency(user?.email ?? '', newValue);
+                  });
+                },
+                items: frequencyOptions
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
               ),
               const SizedBox(height: 20),
               const Align(
