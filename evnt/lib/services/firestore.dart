@@ -5,6 +5,19 @@ import 'package:flutter/material.dart';
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
+  //UserData functions
+  Future<List<Map<String, dynamic>>> getUserData() async {
+    List<Map<String, dynamic>> userDataList = [];
+    QuerySnapshot querySnapshot = await _db.collection('userdata').get();
+
+    querySnapshot.docs.forEach((doc) {
+      userDataList.add(doc.data() as Map<String, dynamic>);
+    });
+
+    return userDataList;
+  }
+
+  //Events functions
   Future<List<Event>> getEvents() async {
     var ref = _db.collection('events');
     var snapshot = await ref.get();
@@ -20,16 +33,18 @@ class FirestoreService {
     }
     if (params.isFree != null) {
       ref = ref.where('price', isEqualTo: 0);
-    }
-    else if (params.priceRange != null) {
-      ref = ref.where('price', isGreaterThanOrEqualTo: params.priceRange!.start);
+    } else if (params.priceRange != null) {
+      ref =
+          ref.where('price', isGreaterThanOrEqualTo: params.priceRange!.start);
       ref = ref.where('price', isLessThanOrEqualTo: params.priceRange!.end);
     }
     if (params.startingDateTime != null) {
-      ref = ref.where('dateTime', isGreaterThanOrEqualTo: params.startingDateTime);
+      ref = ref.where('dateTime',
+          isGreaterThanOrEqualTo: params.startingDateTime);
     }
     if (params.finishingDateTime != null) {
-      ref = ref.where('dateTime', isLessThanOrEqualTo: params.finishingDateTime);
+      ref =
+          ref.where('dateTime', isLessThanOrEqualTo: params.finishingDateTime);
     }
     var snapshot = await ref.get();
     var data = snapshot.docs.map((s) => s.data());
