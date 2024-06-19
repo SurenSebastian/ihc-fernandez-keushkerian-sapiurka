@@ -1,8 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:evnt/services/firestore.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  late Future<Map<String, dynamic>> userData;
+  bool notificationsEnabled = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final User? user = FirebaseAuth.instance.currentUser;
+    userData = FirestoreService().getUserData(user?.email ?? '');
+    userData.then((data) {
+      setState(() {
+        notificationsEnabled = data['notifications'] ?? false;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +42,7 @@ class ProfileScreen extends StatelessWidget {
               const CircleAvatar(
                 radius: 85,
                 backgroundColor: Colors.orange,
-                child: const Icon(
+                child: Icon(
                   Icons.person,
                   size: 50,
                   color: Colors.white,
@@ -40,15 +61,28 @@ class ProfileScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
-              const Wrap(
-                spacing: 10,
-                children: [
-                  Chip(label: Text('sports')),
-                  Chip(label: Text('pets')),
-                  Chip(label: Text('indoor')),
-                  Chip(label: Text('outdoor')),
-                  Chip(label: Text('movies')),
-                ],
+              FutureBuilder<Map<String, dynamic>>(
+                future: userData,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    return const Text('Error loading data');
+                  }
+                  if (!snapshot.hasData || snapshot.data == null) {
+                    return const Text('No data available');
+                  }
+
+                  List<dynamic> interests = snapshot.data!['interests'] ?? [];
+
+                  return Wrap(
+                    spacing: 10,
+                    children: interests
+                        .map((interest) => Chip(label: Text(interest)))
+                        .toList(),
+                  );
+                },
               ),
               const SizedBox(height: 20),
               const Align(
@@ -98,8 +132,15 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 20),
               SwitchListTile(
                 title: const Text('Enable notifications'),
-                value: true,
-                onChanged: (bool value) {},
+                value: notificationsEnabled,
+                onChanged: (bool value) {
+                  setState(() {
+                    notificationsEnabled = value;
+
+                    // FirestoreService()
+                    //     .updateUserNotifications(user?.email ?? '', value);
+                  });
+                },
               ),
               const SizedBox(height: 20),
               const Align(

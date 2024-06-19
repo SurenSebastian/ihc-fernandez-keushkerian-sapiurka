@@ -13,13 +13,13 @@ class Event {
   final String owner;
 
   Event({
-      this.title = '',
-      this.description = '',
-      required this.dateTime,
-      this.location = '',
-      this.price = 0,
-      this.tags = const [],
-      this.owner = '',
+    this.title = '',
+    this.description = '',
+    required this.dateTime,
+    this.location = '',
+    this.price = 0,
+    this.tags = const [],
+    this.owner = '',
   });
 
   factory Event.fromJson(Map<String, dynamic> json) => _$EventFromJson(json);
