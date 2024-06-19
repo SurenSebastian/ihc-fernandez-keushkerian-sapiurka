@@ -6,9 +6,10 @@ class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   //UserData functions
-  Future<List<Map<String, dynamic>>> getUserData() async {
+  Future<List<Map<String, dynamic>>> getUserData(String email) async {
     List<Map<String, dynamic>> userDataList = [];
-    QuerySnapshot querySnapshot = await _db.collection('userdata').get();
+    QuerySnapshot querySnapshot =
+        await _db.collection('userdata').where('email', isEqualTo: email).get();
 
     querySnapshot.docs.forEach((doc) {
       userDataList.add(doc.data() as Map<String, dynamic>);
