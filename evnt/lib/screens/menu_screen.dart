@@ -1,7 +1,6 @@
 import 'package:evnt/screens/create_event_screen.dart';
 import 'package:evnt/screens/my_events_screen.dart';
 import 'package:evnt/screens/profile_screen.dart';
-import 'package:evnt/screens/settings_screen.dart';
 import 'package:evnt/services/firestore.dart';
 import 'package:evnt/widgets/menu_botton.dart';
 import 'package:flutter/material.dart';
@@ -68,14 +67,7 @@ class MenuScreen extends StatelessWidget {
           children: [
             IconButton(
               icon: const Icon(Icons.settings),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SettingsScreen(),
-                  ),
-                );
-              },
+              onPressed: () {},
               color: Colors.white,
               iconSize: 40,
             ),
