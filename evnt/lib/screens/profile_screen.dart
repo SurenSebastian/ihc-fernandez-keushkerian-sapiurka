@@ -10,11 +10,39 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  List<String> interests = [];
+  TextEditingController _interestController = TextEditingController();
+  TextEditingController _locationController = TextEditingController();
+
+  void _addInterest(String email) {
+    if (_interestController.text.isNotEmpty) {
+      setState(() {
+        interests.add(_interestController.text);
+      });
+      FirestoreService().updateUserInterests(interests, email);
+      _interestController.clear();
+    }
+  }
+
+  void _removeInterest(String interest, String email) {
+    setState(() {
+      interests.remove(interest);
+    });
+    FirestoreService().updateUserInterests(interests, email);
+  }
+
+  void _updateLocation(String email) {
+    if (_locationController.text.isNotEmpty) {
+      FirestoreService().updateUserLocation(email, _locationController.text);
+    }
+  }
+
   late Future<Map<String, dynamic>> userData;
   bool notificationsEnabled = false;
   int eventsCreated = 0;
   int eventsAttended = 0;
   String frequency = "Each time an event appears";
+  String location = "Montevideo, Uruguay";
   final List<String> frequencyOptions = [
     "Everyday",
     "Each time an event appears",
@@ -30,9 +58,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     userData.then((data) {
       setState(() {
         notificationsEnabled = data['notifications'] ?? false;
-        eventsCreated = data['created'] ?? 0;
         eventsAttended = data['attended'] ?? 0;
         frequency = data['frequency'] ?? "Each time an event appears";
+        location = data['location'] ?? "Montevideo, Uruguay";
+        interests = List<String>.from(data['interests'] ?? []);
+        _locationController.text = location;
+      });
+    });
+
+    FirestoreService()
+        .getUserCreatedEventsCount(user?.email ?? '')
+        .then((count) {
+      setState(() {
+        eventsCreated = count;
       });
     });
   }
@@ -73,28 +111,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
-              FutureBuilder<Map<String, dynamic>>(
-                future: userData,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  }
-                  if (snapshot.hasError) {
-                    return const Text('Error loading data');
-                  }
-                  if (!snapshot.hasData || snapshot.data == null) {
-                    return const Text('No data available');
-                  }
-
-                  List<dynamic> interests = snapshot.data!['interests'] ?? [];
-
-                  return Wrap(
-                    spacing: 10,
-                    children: interests
-                        .map((interest) => Chip(label: Text(interest)))
-                        .toList(),
+              Wrap(
+                spacing: 8.0,
+                children: interests.map((interest) {
+                  return Chip(
+                    label: Text(interest),
+                    onDeleted: () =>
+                        _removeInterest(interest, user?.email ?? ''),
                   );
-                },
+                }).toList(),
+              ),
+              TextField(
+                controller: _interestController,
+                decoration: InputDecoration(
+                  labelText: 'Add Interest',
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: () => _addInterest(user?.email ?? ''),
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               const Align(
@@ -104,11 +139,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Montevideo, Uruguay',
-                  style: TextStyle(fontSize: 16),
+              TextField(
+                controller: _locationController,
+                decoration: InputDecoration(
+                  labelText: 'Update Location',
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.update),
+                    onPressed: () => _updateLocation(user?.email ?? ''),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -148,7 +186,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onChanged: (bool value) {
                   setState(() {
                     notificationsEnabled = value;
-                    // FirestoreService().updateUserNotifications(user?.email ?? '', value);
+                    FirestoreService()
+                        .updateUserNotifications(user?.email ?? '', value);
                   });
                 },
               ),
@@ -165,7 +204,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onChanged: (String? newValue) {
                   setState(() {
                     frequency = newValue!;
-                    // FirestoreService().updateUserFrequency(user?.email ?? '', newValue);
+                    FirestoreService()
+                        .updateUserFrequency(user?.email ?? '', newValue);
                   });
                 },
                 items: frequencyOptions
