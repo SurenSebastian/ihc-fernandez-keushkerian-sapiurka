@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:evnt/screens/menu_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,9 +11,18 @@ class LoginAccountScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
+    Future<bool> _emailExists(String email) async {
+      QuerySnapshot snapshot = await _firestore
+          .collection('userdata')
+          .where('email', isEqualTo: email)
+          .get();
+      return snapshot.docs.isNotEmpty;
+    }
+
     return Scaffold(
       backgroundColor: Colors.orange,
       body: Center(
@@ -55,7 +65,8 @@ class LoginAccountScreen extends StatelessWidget {
                 onPressed: () {
                   // Implement Forgot Password
                 },
-                child: Text('Forgot password?', style: TextStyle(color: Colors.white)),
+                child: Text('Forgot password?',
+                    style: TextStyle(color: Colors.white)),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -74,13 +85,28 @@ class LoginAccountScreen extends StatelessWidget {
                     textColor: Colors.orange,
                     onPressed: () async {
                       try {
-                        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+                        UserCredential userCredential =
+                            await _auth.signInWithEmailAndPassword(
                           email: emailController.text,
                           password: passwordController.text,
                         );
 
                         User? user = userCredential.user;
                         print('Signed in: ${user?.uid}');
+
+                        bool emailExists =
+                            await _emailExists(emailController.text);
+                        if (!emailExists) {
+                          await _firestore.collection('userdata').add({
+                            'email': emailController.text,
+                            'notifications': false,
+                            'created': 0,
+                            'attended': 0,
+                            'frequency': 'Each time an event appears',
+                            'location': 'No location',
+                            'interests': [],
+                          });
+                        }
 
                         emailController.clear();
                         passwordController.clear();
@@ -92,7 +118,8 @@ class LoginAccountScreen extends StatelessWidget {
                         print("Login error: $e");
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Email or password not valid. Please try again.'),
+                            content: Text(
+                                'Email or password not valid. Please try again.'),
                             backgroundColor: Colors.red,
                           ),
                         );
