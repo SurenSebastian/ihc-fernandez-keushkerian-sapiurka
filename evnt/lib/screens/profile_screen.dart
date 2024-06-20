@@ -1,8 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:evnt/services/firestore.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  _ProfileScreenState createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  List<String> interests = [];
+  TextEditingController _interestController = TextEditingController();
+  TextEditingController _locationController = TextEditingController();
+
+  void _addInterest(String email) {
+    if (_interestController.text.isNotEmpty) {
+      setState(() {
+        interests.add(_interestController.text);
+      });
+      FirestoreService().updateUserInterests(interests, email);
+      _interestController.clear();
+    }
+  }
+
+  void _removeInterest(String interest, String email) {
+    setState(() {
+      interests.remove(interest);
+    });
+    FirestoreService().updateUserInterests(interests, email);
+  }
+
+  void _updateLocation(String email) {
+    if (_locationController.text.isNotEmpty) {
+      FirestoreService().updateUserLocation(email, _locationController.text);
+    }
+  }
+
+  late Future<Map<String, dynamic>> userData;
+  bool notificationsEnabled = false;
+  int eventsCreated = 0;
+  int eventsAttended = 0;
+  String frequency = "Each time an event appears";
+  String location = "Montevideo, Uruguay";
+  final List<String> frequencyOptions = [
+    "Everyday",
+    "Each time an event appears",
+    "Every week",
+    "Every 10 days"
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    final User? user = FirebaseAuth.instance.currentUser;
+    userData = FirestoreService().getUserData(user?.email ?? '');
+    userData.then((data) {
+      setState(() {
+        notificationsEnabled = data['notifications'] ?? false;
+        eventsAttended = data['attended'] ?? 0;
+        frequency = data['frequency'] ?? "Each time an event appears";
+        location = data['location'] ?? "Montevideo, Uruguay";
+        interests = List<String>.from(data['interests'] ?? []);
+        _locationController.text = location;
+      });
+    });
+
+    FirestoreService()
+        .getUserCreatedEventsCount(user?.email ?? '')
+        .then((count) {
+      setState(() {
+        eventsCreated = count;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,157 +82,159 @@ class ProfileScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Profile'),
-        backgroundColor: const Color.fromARGB(255, 255, 106, 0),
-        centerTitle: true,
-        titleTextStyle: const TextStyle(color: Colors.white, fontSize: 20),
+        backgroundColor: Colors.orange,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const CircleAvatar(
-                radius: 85, // Adjusted size
-                backgroundColor: Color.fromARGB(255, 255, 106, 0),
-                child: Icon(Icons.person, size: 60, color: Colors.white),
+                radius: 85,
+                backgroundColor: Colors.orange,
+                child: Icon(
+                  Icons.person,
+                  size: 50,
+                  color: Colors.white,
+                ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               Text(
                 user?.email ?? 'No email',
-                style: TextStyle(fontSize: 24, color: Colors.grey[700]),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 20),
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   'My interests:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Wrap(
+                spacing: 8.0,
+                children: interests.map((interest) {
+                  return Chip(
+                    label: Text(interest),
+                    onDeleted: () =>
+                        _removeInterest(interest, user?.email ?? ''),
+                  );
+                }).toList(),
+              ),
+              TextField(
+                controller: _interestController,
+                decoration: InputDecoration(
+                  labelText: 'Add Interest',
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: () => _addInterest(user?.email ?? ''),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Current Location:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+              TextField(
+                controller: _locationController,
+                decoration: InputDecoration(
+                  labelText: 'Update Location',
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.update),
+                    onPressed: () => _updateLocation(user?.email ?? ''),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Events attended:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  '$eventsAttended events',
                   style: TextStyle(fontSize: 16),
                 ),
               ),
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Wrap(
-                  spacing: 8.0,
-                  children: [
-                    Chip(
-                      label: const Text('sports'),
-                      onDeleted: () {},
-                      backgroundColor: const Color.fromARGB(255, 255, 106, 0),
-                      deleteIconColor: Colors.white,
-                      labelStyle: const TextStyle(color: Colors.white),
-                    ),
-                    Chip(
-                      label: const Text('pets'),
-                      onDeleted: () {},
-                      backgroundColor: const Color.fromARGB(255, 255, 106, 0),
-                      deleteIconColor: Colors.white,
-                      labelStyle: const TextStyle(color: Colors.white),
-                    ),
-                    Chip(
-                      label: const Text('indoor'),
-                      onDeleted: () {},
-                      backgroundColor: const Color.fromARGB(255, 255, 106, 0),
-                      deleteIconColor: Colors.white,
-                      labelStyle: const TextStyle(color: Colors.white),
-                    ),
-                    Chip(
-                      label: const Text('outdoor'),
-                      onDeleted: () {},
-                      backgroundColor: const Color.fromARGB(255, 255, 106, 0),
-                      deleteIconColor: Colors.white,
-                      labelStyle: const TextStyle(color: Colors.white),
-                    ),
-                    Chip(
-                      label: const Text('movies'),
-                      onDeleted: () {},
-                      backgroundColor: const Color.fromARGB(255, 255, 106, 0),
-                      deleteIconColor: Colors.white,
-                      labelStyle: const TextStyle(color: Colors.white),
-                    ),
-                  ],
+              const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Events created:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Current Location:',
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: const Text(
-                        'Montevideo, Uruguay',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
               Align(
                 alignment: Alignment.centerLeft,
-                child: RichText(
-                  text: const TextSpan(
-                    style: TextStyle(
-                        fontSize: 18, color: Colors.black), // Increased size
-                    children: [
-                      TextSpan(text: 'Events attended: '),
-                      TextSpan(
-                        text: '10 events',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
+                child: Text(
+                  '$eventsCreated events',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+              const SizedBox(height: 20),
+              SwitchListTile(
+                title: const Text('Enable notifications'),
+                value: notificationsEnabled,
+                onChanged: (bool value) {
+                  setState(() {
+                    notificationsEnabled = value;
+                    FirestoreService()
+                        .updateUserNotifications(user?.email ?? '', value);
+                  });
+                },
+              ),
+              const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Frequency:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+              DropdownButton<String>(
+                value: frequency,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    frequency = newValue!;
+                    FirestoreService()
+                        .updateUserFrequency(user?.email ?? '', newValue);
+                  });
+                },
+                items: frequencyOptions
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+              const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Privacy policy & terms of service',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
                   ),
                 ),
               ),
-              const SizedBox(height: 16), // Increased space
-              Align(
-                alignment: Alignment.centerLeft,
-                child: RichText(
-                  text: const TextSpan(
-                    style: TextStyle(
-                        fontSize: 18, color: Colors.black), // Increased size
-                    children: [
-                      TextSpan(text: 'Events created: '),
-                      TextSpan(
-                        text: '2 events',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text('Log Out'),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
               ),
             ],
           ),
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: const Color.fromARGB(255, 255, 106, 0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {},
-              color: Colors.white,
-              iconSize: 40, // Tamaño del ícono
-            ),
-          ],
         ),
       ),
     );

@@ -5,6 +5,78 @@ import 'package:flutter/material.dart';
 class FirestoreService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
+  void updateUserInterests(List<String> interests, String email) async {
+    QuerySnapshot snapshot =
+        await _db.collection('userdata').where('email', isEqualTo: email).get();
+    if (snapshot.docs.isNotEmpty) {
+      String docId = snapshot.docs.first.id;
+      await _db.collection('userdata').doc(docId).update({
+        'interests': interests,
+      });
+    } else {
+      throw Exception('User not found');
+    }
+  }
+
+  Future<void> updateUserFrequency(String email, String frequency) async {
+    QuerySnapshot snapshot =
+        await _db.collection('userdata').where('email', isEqualTo: email).get();
+    if (snapshot.docs.isNotEmpty) {
+      String docId = snapshot.docs.first.id;
+      await _db.collection('userdata').doc(docId).update({
+        'frequency': frequency,
+      });
+    } else {
+      throw Exception('User not found');
+    }
+  }
+
+  Future<void> updateUserLocation(String email, String location) async {
+    QuerySnapshot snapshot =
+        await _db.collection('userdata').where('email', isEqualTo: email).get();
+    if (snapshot.docs.isNotEmpty) {
+      String docId = snapshot.docs.first.id;
+      await _db.collection('userdata').doc(docId).update({
+        'location': location,
+      });
+    } else {
+      throw Exception('User not found');
+    }
+  }
+
+  Future<int> getUserCreatedEventsCount(String email) async {
+    QuerySnapshot snapshot =
+        await _db.collection('events').where('owner', isEqualTo: email).get();
+    return snapshot.docs.length;
+  }
+
+  Future<void> updateUserNotifications(String email, bool notifications) async {
+    QuerySnapshot snapshot =
+        await _db.collection('userdata').where('email', isEqualTo: email).get();
+    if (snapshot.docs.isNotEmpty) {
+      String docId = snapshot.docs.first.id;
+      await _db.collection('userdata').doc(docId).update({
+        'notifications': notifications,
+      });
+    } else {
+      throw Exception('User not found');
+    }
+  }
+
+  //UserData functions
+  Future<Map<String, dynamic>> getUserData(String email) async {
+    List<Map<String, dynamic>> userDataList = [];
+    QuerySnapshot querySnapshot =
+        await _db.collection('userdata').where('email', isEqualTo: email).get();
+
+    querySnapshot.docs.forEach((doc) {
+      userDataList.add(doc.data() as Map<String, dynamic>);
+    });
+
+    return userDataList[0];
+  }
+
+  //Events functions
   Future<List<Event>> getEvents() async {
     var ref = _db.collection('events');
     var snapshot = await ref.get();
@@ -20,16 +92,18 @@ class FirestoreService {
     }
     if (params.isFree != null) {
       ref = ref.where('price', isEqualTo: 0);
-    }
-    else if (params.priceRange != null) {
-      ref = ref.where('price', isGreaterThanOrEqualTo: params.priceRange!.start);
+    } else if (params.priceRange != null) {
+      ref =
+          ref.where('price', isGreaterThanOrEqualTo: params.priceRange!.start);
       ref = ref.where('price', isLessThanOrEqualTo: params.priceRange!.end);
     }
     if (params.startingDateTime != null) {
-      ref = ref.where('dateTime', isGreaterThanOrEqualTo: params.startingDateTime);
+      ref = ref.where('dateTime',
+          isGreaterThanOrEqualTo: params.startingDateTime);
     }
     if (params.finishingDateTime != null) {
-      ref = ref.where('dateTime', isLessThanOrEqualTo: params.finishingDateTime);
+      ref =
+          ref.where('dateTime', isLessThanOrEqualTo: params.finishingDateTime);
     }
     var snapshot = await ref.get();
     var data = snapshot.docs.map((s) => s.data());
