@@ -44,6 +44,26 @@ class FirestoreService {
     }
   }
 
+  Future<void> createUserData({
+    required String email,
+    required bool notificationsEnabled,
+    required int eventsCreated,
+    required int eventsAttended,
+    required String frequency,
+    required String location,
+    required List<String> interests,
+  }) async {
+    await _db.collection('userdata').add({
+      'email': email,
+      'notifications': notificationsEnabled,
+      'created': eventsCreated,
+      'attended': eventsAttended,
+      'frequency': frequency,
+      'location': location,
+      'interests': interests,
+    });
+  }
+
   Future<int> getUserCreatedEventsCount(String email) async {
     QuerySnapshot snapshot =
         await _db.collection('events').where('owner', isEqualTo: email).get();

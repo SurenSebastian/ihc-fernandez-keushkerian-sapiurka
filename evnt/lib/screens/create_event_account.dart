@@ -24,7 +24,8 @@ class _CreateEventAccount extends State<CreateEventAccount> {
   String? selectedDay;
   String? selectedMonth;
   String? selectedYear;
-  List<String> days = List<String>.generate(31, (index) => (index + 1).toString());
+  List<String> days =
+      List<String>.generate(31, (index) => (index + 1).toString());
   List<String> months = [
     "January",
     "February",
@@ -39,7 +40,8 @@ class _CreateEventAccount extends State<CreateEventAccount> {
     "November",
     "December"
   ];
-  List<String> years = List<String>.generate(100, (index) => (DateTime.now().year - index).toString());
+  List<String> years = List<String>.generate(
+      100, (index) => (DateTime.now().year - index).toString());
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -60,9 +62,12 @@ class _CreateEventAccount extends State<CreateEventAccount> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                InputField(hintText: "Your First Name", controller: firstNameController),
+                InputField(
+                    hintText: "Your First Name",
+                    controller: firstNameController),
                 SizedBox(height: 8),
-                InputField(hintText: "Your Last Name", controller: lastNameController),
+                InputField(
+                    hintText: "Your Last Name", controller: lastNameController),
                 SizedBox(height: 8),
                 Row(
                   children: [
@@ -107,7 +112,10 @@ class _CreateEventAccount extends State<CreateEventAccount> {
                 SizedBox(height: 8),
                 InputField(hintText: "Your Email", controller: emailController),
                 SizedBox(height: 8),
-                InputField(hintText: "Your Password", controller: passwordController, obscureText: true),
+                InputField(
+                    hintText: "Your Password",
+                    controller: passwordController,
+                    obscureText: true),
                 SizedBox(height: 16),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -129,7 +137,8 @@ class _CreateEventAccount extends State<CreateEventAccount> {
                         String lastName = lastNameController.text;
                         String email = emailController.text;
                         String password = passwordController.text;
-                        String birthDate = "$selectedDay $selectedMonth $selectedYear";
+                        String birthDate =
+                            "$selectedDay $selectedMonth $selectedYear";
 
                         // Si algun campo es nulo, mostrar un snackbar
                         if (firstName.isEmpty ||
@@ -148,7 +157,8 @@ class _CreateEventAccount extends State<CreateEventAccount> {
                           return;
                         }
                         try {
-                          UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+                          UserCredential userCredential =
+                              await _auth.createUserWithEmailAndPassword(
                             email: email,
                             password: password,
                           );
@@ -170,6 +180,16 @@ class _CreateEventAccount extends State<CreateEventAccount> {
                               ),
                             );
 
+                            _firestore.collection('userdata').add({
+                              'email': email,
+                              'notifications': false,
+                              'created': 0,
+                              'attended': 0,
+                              'frequency': 'Each time an event appears',
+                              'location': 'No location',
+                              'interests': [],
+                            });
+
                             // Clear the fields
                             firstNameController.clear();
                             lastNameController.clear();
@@ -180,7 +200,8 @@ class _CreateEventAccount extends State<CreateEventAccount> {
                             selectedYear = null;
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => MenuScreen()),
+                              MaterialPageRoute(
+                                  builder: (context) => MenuScreen()),
                             );
                           }).catchError((error) {
                             ScaffoldMessenger.of(context).showSnackBar(
