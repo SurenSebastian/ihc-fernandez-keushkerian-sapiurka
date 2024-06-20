@@ -218,8 +218,6 @@ class _EventAdvancedSearchScreenState extends State<EventAdvancedSearchScreen> {
       startingDateTime: _useStartingDateTime ? _startingDateTime : null,
       finishingDateTime: _useFinishingDateTime ? _finishingDateTime : null,
     );
-
-    print(eventParams);
     Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => EventSearchScreen(eventParams)),

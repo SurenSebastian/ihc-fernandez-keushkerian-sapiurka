@@ -6,8 +6,9 @@ import 'package:evnt/widgets/menu_botton.dart';
 import 'package:flutter/material.dart';
 import 'package:evnt/screens/event_search.dart';
 
-//import 'package:evnt/screens/create_event_screen.dart';
 class MenuScreen extends StatelessWidget {
+  const MenuScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +16,8 @@ class MenuScreen extends StatelessWidget {
           title: const Text('Menu'),
           backgroundColor: const Color.fromARGB(255, 255, 106, 0),
           centerTitle: true,
-          titleTextStyle: const TextStyle(color: Colors.white, fontSize: 35)),
+          titleTextStyle: const TextStyle(color: Colors.white, fontSize: 35),
+          automaticallyImplyLeading: false),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: GridView.count(
@@ -53,7 +55,7 @@ class MenuScreen extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => MyEventsScreen(),
+                      builder: (context) => const MyEventsScreen(),
                     ),
                   );
                 }),

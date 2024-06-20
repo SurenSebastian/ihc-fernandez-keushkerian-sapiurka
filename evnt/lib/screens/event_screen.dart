@@ -12,6 +12,7 @@ class EventScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(event.title),
         backgroundColor: Colors.orange,
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -64,7 +65,7 @@ class EventScreen extends StatelessWidget {
         child: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
-            // Acción al presionar el botón de retroceso
+            Navigator.pop(context);
           },
         ),
       ),

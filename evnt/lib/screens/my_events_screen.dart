@@ -1,30 +1,12 @@
+import 'package:evnt/screens/menu_screen.dart';
 import 'package:evnt/services/firestore.dart';
 import 'package:evnt/widgets/event_card.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MyEventsScreen extends StatelessWidget {
-  // List of events as Mock data
-  /*
-  final List<Map<String, String>> events = [
-    {'title': 'Rock Concert'},
-    {'title': 'Pop Concert'},
-    {'title': 'Pets meeting'},
-    {'title': 'Yoga Class'},
-    {'title': 'Crossfit Class'},
-    {'title': 'Football match'},
-    {'title': 'Cumbia Festival'},
-    {'title': 'Skydiving'},
-    {'title': 'Pets meeting'},
-    {'title': 'Basketball Game'},
-    {'title': 'Art Exhibition'},
-    {'title': 'Movie Night'},
-    {'title': 'Cooking Workshop'},
-    {'title': 'Book Club Meeting'},
-  ];
-  */
 
-  MyEventsScreen({super.key});
+  const MyEventsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +25,7 @@ class MyEventsScreen extends StatelessWidget {
             appBar: AppBar(
               title: const Text('My Events'),
               backgroundColor: Colors.orange,
+              automaticallyImplyLeading: false,
             ),
             body: ListView.builder(
               itemCount: events.length,
@@ -50,15 +33,18 @@ class MyEventsScreen extends StatelessWidget {
                 return EventCard(event: events[index]);
               },
             ),
-            bottomNavigationBar: const BottomAppBar(
+            bottomNavigationBar: BottomAppBar(
               color: Colors.orange,
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                ),
-              ),
+              child: IconButton(
+                      icon: const Icon(Icons.arrow_back, color: Colors.white),
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => const MenuScreen()),
+                          (route) => false,
+                        );
+                      },
+                    ),
             ),
           );
         } else {
