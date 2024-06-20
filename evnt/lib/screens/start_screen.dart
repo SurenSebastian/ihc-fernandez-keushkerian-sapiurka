@@ -8,7 +8,6 @@ import 'event_screen.dart';
 import '../widgets/google_signin_button.dart';
 import 'create_event_account.dart';
 
-
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
 
@@ -44,21 +43,6 @@ class StartScreen extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               CustomButton(
-                text: 'Sign in with Facebook',
-                icon: Icons.facebook,
-                color: Colors.blue,
-                textColor: Colors.white,
-                onPressed: () {
-                  // Implement Facebook sign-in
-                },
-              ),
-              const SizedBox(height: 20),
-              Divider(
-                color: Colors.white,
-                thickness: 1,
-              ),
-              const SizedBox(height: 10),
-              CustomButton(
                 text: 'Log in Evnt Account',
                 color: Colors.white,
                 textColor: Colors.orange,
@@ -76,8 +60,8 @@ class StartScreen extends StatelessWidget {
                 textColor: Colors.orange,
                 onPressed: () {
                   Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => CreateEventAccount()),
+                    context,
+                    MaterialPageRoute(builder: (context) => CreateEventAccount()),
                   );
                 },
               ),
@@ -88,8 +72,6 @@ class StartScreen extends StatelessWidget {
     );
   }
 }
-
-
 
 Future<User?> signInWithGoogle() async {
   final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
