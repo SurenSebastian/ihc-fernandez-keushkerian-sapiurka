@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:evnt/services/firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:evnt/screens/start_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -74,6 +76,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
     });
   }
+
+  Future<void> _signOut() async {
+    try {
+
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signInSilently();
+      if (googleUser != null) {
+        await GoogleSignIn().signOut();
+      }
+      await FirebaseAuth.instance.signOut();
+
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => StartScreen()),
+            (Route<dynamic> route) => false,
+      );
+    } catch (e) {
+      SnackBar(
+        content: Text('Error signing out: $e'),
+        backgroundColor: Colors.red,
+      );
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +253,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  _signOut();
+                },
                 child: const Text('Log Out'),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
               ),
