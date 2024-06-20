@@ -65,12 +65,12 @@ class MenuScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: () {},
-              color: Colors.white,
-              iconSize: 40,
-            ),
+            // IconButton(
+            //   icon: const Icon(Icons.settings),
+            //   onPressed: () {},
+            //   color: Colors.white,
+            //   iconSize: 40,
+            // ),
             IconButton(
               icon: const Icon(Icons.account_circle),
               onPressed: () {
@@ -84,12 +84,12 @@ class MenuScreen extends StatelessWidget {
               color: Colors.white,
               iconSize: 40,
             ),
-            IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {},
-              color: Colors.white,
-              iconSize: 40,
-            ),
+            // IconButton(
+            //   icon: const Icon(Icons.arrow_back),
+            //   onPressed: () {},
+            //   color: Colors.white,
+            //   iconSize: 40,
+            // ),
           ],
         ),
       ),
