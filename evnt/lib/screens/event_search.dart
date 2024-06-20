@@ -1,4 +1,5 @@
 import 'package:evnt/screens/event_advanced_search.dart';
+import 'package:evnt/screens/menu_screen.dart';
 import 'package:evnt/services/firestore.dart';
 import 'package:evnt/widgets/event_detailed_card.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class EventSearchScreen extends StatelessWidget {
             appBar: AppBar(
               title: const Text('Find your next adventure'),
               backgroundColor: Colors.orange,
+              automaticallyImplyLeading: false
             ),
             body: events.isEmpty 
                 ? const Center(child: Text('No events found')) 
@@ -40,7 +42,11 @@ class EventSearchScreen extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.arrow_back, color: Colors.white),
                     onPressed: () {
-                      // Acción al presionar el botón de retroceso
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => MenuScreen()),
+                        (route) => false,
+                      );
                     },
                   ),
                   IconButton(
